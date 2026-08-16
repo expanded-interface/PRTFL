@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  WORKSHOP — Todo está interconectado (ARCHIVO DUMMY)
+  Usa el mismo layout de dos columnas que los proyectos
+  (project-split), ya que un taller también se beneficia de
+  texto + galería con scroll independiente.
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Todo está interconectado</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../Proyectos/proyectos.css">
+  <style>
+    body:not(.embedded) { opacity: 0; animation: bodyFadeIn 0.45s ease 0.05s forwards; }
+    @keyframes bodyFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    body.embedded #top-bar, body.embedded #left-nav, body.embedded #right-nav,
+    body.embedded #bottom-bar, body.embedded #overlay { display: none !important; }
+    body.embedded #main { top: 0; left: 0; right: 0; bottom: 0; }
+  </style>
+</head>
+<body class="project-page">
+  <header id="top-bar">
+    <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
+    <div id="top-right">
+      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <span id="clock">00:00</span>
+    </div>
+  </header>
+  <nav id="left-nav">
+    <ul>
+      <li class="nav-section"><a href="../index.html">— Home</a></li>
+      <li class="nav-section active"><a href="../index.html?page=workshops">— Laboratories</a></li>
+      <li class="nav-section"><a href="../index.html?page=about">About</a></li>
+    </ul>
+    <div class="nav-project-label"><p>Viendo ahora</p><p>Todo está interconectado</p></div>
+  </nav>
+  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <div id="overlay" onclick="closeMobileNav()"></div>
+
+  <main id="main">
+    <div class="project-split">
+      <div class="project-col-text">
+        <div class="project-header">
+          <div class="project-meta">
+            <span class="pill" style="background:#ffcefb">taller</span>
+            <span class="project-year">2025</span>
+          </div>
+          <h1>Todo está interconectado</h1>
+          <p class="project-lead">[Reemplaza por la descripción real del taller.]</p>
+        </div>
+        <div class="project-ficha">
+          <dl>
+            <dt>Year</dt>     <dd>2025</dd>
+            <dt>Category</dt> <dd>Taller</dd>
+          </dl>
+        </div>
+      </div>
+      <div class="project-col-images">
+        <div class="project-img-block">
+          <div class="img-placeholder">
+            <span>imagen del taller</span>
+          </div>
+          <p class="img-caption">[pie de foto]</p>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <footer id="bottom-bar">
+    <span class="pill" style="background:#bde4be">Last update 08-10-26</span>
+  </footer>
+
+  <script src="../i18n.js"></script>
+  <script src="../main.js"></script>
+  <script src="../contrast.js"></script>
+</body>
+</html>

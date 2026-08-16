@@ -1,0 +1,1409 @@
+/* ── VARIABLES ── */
+:root {
+  --black: #111;
+  --white: #ffffff;
+  --nav-w: 220px;
+  --top-h: 48px;
+  --bot-h: 36px;
+  /* ✏️ Tipografía: se cambió el monospace único por un par de sans-serif
+     geométricos, más cercanos a una identidad de galería contemporánea
+     (tipo Apple / Futura):
+       --font-serif → titulares, logo, nombres de proyecto (Space Grotesk:
+                       geométrico, con carácter, para momentos de mayor peso)
+       --font-mono  → chrome de UI: nav, botones, meta, pills, buscador
+                       (Inter: neutro y muy legible en tamaños chicos;
+                       el nombre de la variable se conserva para no romper
+                       el resto del CSS que ya la usa en decenas de reglas)
+     El letter-spacing ya existente en nav/pills/mono queda igual: sobre
+     un sans-serif geométrico logra ese aire de etiqueta de sala minimal. */
+  --font-serif: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+  --font-mono: 'Inter', 'Helvetica Neue', Arial, sans-serif;
+  --line: rgba(0,0,0,0.1);
+  /* ✏️ Color del stroke/borde de las barras del shell (top-bar,
+     left-nav, right-nav, bottom-bar) Y de los campos de búsqueda.
+     Antes cada uno tenía su propio hex suelto (#152d1b, #ccc) — ahora
+     todos apuntan acá, así que cambiar este único valor los actualiza
+     a todos de una vez. */
+  --stroke: #210d0d;
+  --stroke-input: #ccc;
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+html, body {
+  height: 100%;
+  background: var(--white);
+  color: var(--black);
+  /* Cuerpo de texto en Inter (--font-mono): los titulares que necesitan
+     el acento geométrico de Space Grotesk lo declaran explícitamente
+     en su propio selector (h1, h2, h3, #logo, etc.) */
+  font-family: var(--font-mono);
+  overflow: hidden;
+}
+
+
+/* ════════════════════════════════
+   LAYOUT FIJO
+════════════════════════════════ */
+
+/* TOP BAR */
+#top-bar {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: var(--top-h);
+  background: var(--white);
+  border-bottom: 1px solid var(--black);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 100;
+}
+
+#logo {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 0.8rem;
+  font-weight: 300;
+  letter-spacing: 0.03em;
+  cursor: pointer;
+}
+
+#top-right {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  letter-spacing: 0.0em;
+}
+
+#menu-toggle {
+  display: none;
+  font-family: var(--font-mono);
+  font-size: 0.8rem;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  
+  color: var(--black);
+}
+
+/* LEFT NAV */
+#left-nav {
+  position: fixed;
+  top: var(--top-h);
+  left: 0;
+  bottom: var(--bot-h);
+  width: var(--nav-w);
+  border-right: 1px solid var(--stroke);
+  background: var(--white);
+  overflow-y: auto;
+  z-index: 90;
+  padding: 16px 0;
+}
+
+#left-nav ul { list-style: none; }
+
+/* Secciones principales */
+.nav-section > a,
+.nav-section > span {
+  display: block;
+  padding: 6px 20px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.18em;
+  text-decoration: none;
+  color: var(--black);
+  cursor: pointer;
+  transition: color 0.15s;
+}
+.nav-section > a:hover,
+.nav-section > span:hover { color: #12ff12; }
+.nav-section.active > a,
+.nav-section.active > span { color: #3434ff; }
+
+/* Contador de items (proyectos / textos / workshops) */
+.nav-count {
+  color: #c2c1c1;
+  font-size: 0.56rem;
+  letter-spacing: 0;
+  margin-left: 2px;
+}
+
+/* Hijos colapsables del nav: cerrados por defecto,
+   se muestran al agregar la clase .open (ver toggleGroup() en main.js) */
+.nav-children { display: none; padding: 0; }
+.nav-children.open { display: block; }
+
+
+/* Ramas tipo árbol */
+/* ─────────────────────────────
+   Ramas tipo árbol
+   ──────────────────────────────
+   La línea vertical del "tronco" se dibuja UNA sola vez por
+   lista (en .nav-children), no una por ítem. Así queda
+   continua sin importar cuántas líneas ocupe cada título,
+   en vez de segmentos sueltos que se ven cortados.
+───────────────────────────── */
+
+.nav-children {
+  position: relative;
+}
+
+.nav-children::before {
+  content: '';
+  position: absolute;
+  left: 16px;
+  top: 0;
+  bottom: 10px;
+  width: 1px;
+  background: #cecdcd;
+}
+
+.nav-branch {
+  position: relative;
+  padding-left: 29px;
+}
+
+/* Link */
+.nav-branch a {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 4px 8px;
+  font-family: var(--font-mono);
+  font-size: 0.60rem;
+  color: #505050;
+  text-decoration: none;
+  transition: color 0.15s;
+}
+
+.nav-branch-title {
+  line-height: 1.50;
+}
+
+.nav-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+.nav-tag {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: 0.52rem;
+  letter-spacing: 0.02em;
+  padding: 1px 4px;
+  border-radius: 10px;
+  line-height: 1.5;
+}
+
+.nav-tag-year {
+  background: transparent;
+  border: 1px solid #eae8e8;
+  color: #999;
+}
+
+.nav-tag-cat {
+  background: #f7f7f7;
+  color: #c7c7c7;
+}
+
+/* Línea horizontal */
+.nav-branch a::before {
+  content: '';
+  position: absolute;
+  left: -12px;
+  top: 13px;
+  width: 10px;
+  height: 1px;
+  background: #ccc;
+}
+
+.nav-branch a:hover {
+  color: #3535c8;
+}
+
+/* RIGHT NAV */
+#right-nav {
+  position: fixed;
+  top: var(--top-h);
+  right: 0;
+  bottom: var(--bot-h);
+  width: 36px;
+  border-left: 1px solid var(--stroke);
+  background: var(--white);
+  z-index: 90;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✏️ Placeholder fijo: mismo texto en toda la aplicación
+   (no cambia por sección ni por proyecto activo). */
+#right-nav-label {
+  writing-mode: vertical-rl;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #aaa;
+  transform: rotate(180deg);
+}
+
+/* BOTTOM BAR */
+#bottom-bar {
+  position: fixed;
+  bottom: 0; left: 0; right: 0;
+  height: var(--bot-h);
+  background: var(--white);
+  border-top: 1px solid var(--stroke);
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  gap: 10px;
+  z-index: 100;
+  font-family: var(--font-mono);
+  font-size: 0.50rem;
+  overflow: hidden;
+}
+
+/* MAIN */
+#main {
+  position: fixed;
+  top: var(--top-h);
+  left: var(--nav-w);
+  right: 36px;
+  bottom: var(--bot-h);
+  height: calc(100vh - var(--top-h) - var(--bot-h));
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: var(--white);
+}
+
+/* OVERLAY MÓVIL */
+#overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.25);
+  z-index: 150;
+}
+#overlay.active { display: block; }
+
+
+/* ════════════════════════════════
+   TRANSICIONES DE PÁGINA
+   ────────────────────────────────
+   page-enter: la página nueva aparece suavemente
+   page-exit:  la página vieja sale hacia arriba
+════════════════════════════════ */
+@keyframes pageEnter {
+  from { opacity: 0; transform: translateY(10px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pageExit {
+  from { opacity: 1; transform: translateY(0); }
+  to   { opacity: 0; transform: translateY(-8px); }
+}
+
+.page-enter {
+  animation: pageEnter 0.35s ease forwards;
+}
+
+.page-exit {
+  animation: pageExit 0.18s ease forwards;
+  pointer-events: none;
+}
+
+
+/* ════════════════════════════════
+   PÁGINAS
+════════════════════════════════ */
+.page { display: none; width: 100%; min-height: 100%; }
+.page.active { display: block; }
+
+/* Páginas con layout de dos columnas (home, about) */
+.split-page { display: none; }
+.split-page.active {
+  display: flex;
+  min-height: 100%;
+}
+
+/* Home ocupa exactamente el área de #main para que los hijos
+   con position:absolute se anclen correctamente */
+#page-home {
+  position: relative;
+  height: 100%;
+  min-height: unset;
+  overflow: hidden;
+}
+
+.split-text {
+  flex: 1 1 50%;
+  padding: 48px 40px;
+  border-right: 1px solid var(--black);
+  overflow-y: auto;
+}
+
+.split-text h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 16px;
+}
+
+.split-text p {
+  font-size: 0.72rem;
+  line-height: 1.75;
+  max-width: 480px;
+  margin-bottom: 16px;
+  color: #222;
+}
+
+.split-text blockquote {
+  font-style: italic;
+  color: #3535c8;
+  font-size: 0.7rem;
+  line-height: 1.7;
+  border-left: 2px solid #f5c842;
+  padding-left: 16px;
+  margin-top: 28px;
+  max-width: 480px;
+}
+
+.tag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 36px;
+}
+
+.split-image {
+  flex: 1 1 50%;
+  position: relative;
+  overflow: hidden;
+  min-height: 400px;
+}
+
+.image-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: #fffdf9;
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #999;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  gap: 12px;
+}
+
+/* Para poner imagen real: agrega <img> dentro de .split-image
+   y elimina el .image-placeholder */
+.split-image img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Páginas de contenido simple */
+.content-block {
+  padding: 48px;
+  max-width: 720px;
+}
+
+.content-block h2 {
+  font-family: var(--font-serif);
+  font-style: normal;
+  font-size: 2rem;
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.content-block p {
+  font-size: 1rem;
+  line-height: 0.72;
+  color: #222;
+  margin-bottom: 14px;
+}
+
+/* Lista de Research agrupada por año (ver renderResearchList en main.js) */
+.research-year-heading {
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #aaa;
+  margin: 20px 0 6px;
+}
+.research-year-group ul { list-style: none; }
+.research-year-group li { padding: 3px 0; }
+.research-year-group a {
+  font-family: var(--font-mono);
+  font-size: 0.75rem;
+  color: #222;
+  text-decoration: none;
+  border-bottom: 1px solid transparent;
+}
+.research-year-group a:hover { color: #3535c8; border-color: #3535c8; }
+
+.content-block li {
+  font-family: var(--font-mono);
+  font-size: 0.72rem;
+  letter-spacing: 0.04em;
+  padding: 4px 0;
+  color: #444;
+  list-style: none;
+}
+
+/* Cabecera de páginas con grid */
+.page-header {
+  flex: 1 1 50%;
+  padding: 48px 40px;
+  border-right: 1px solid var(--black);
+  overflow-y: auto;
+}
+
+.page-header h2 {
+  font-family: var(--font-serif);
+  font-size: 2rem;
+  font-weight: 500;
+  line-height: 1.1;
+  margin-bottom: 16px;
+  }
+
+/* Grid de tarjetas */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+}
+
+/* ════════════════════════════════
+   TARJETAS (CARDS)
+════════════════════════════════ */
+.card {
+  border-right: 1px solid var(--black);
+  border-bottom: 1px solid var(--black);
+  transition: background 0.2s;
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.card:hover { background: #f4f4f4; }
+
+/* ── Placeholder sin imagen ── */
+.card-thumb {
+  width: 100%;
+  height: 200px;
+  background: #e8e4dd;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  color: #bbb;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+/* ── Slider de imágenes ── */
+.card-slider {
+  position: relative;
+  width: 100%;
+  height: 200px;
+  overflow: hidden;
+  flex-shrink: 0;
+  background: #e8e4dd;
+}
+
+.slider-track {
+  display: flex;
+  height: 100%;
+  transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform;
+}
+
+.slide {
+  min-width: 100%;
+  height: 100%;
+  flex-shrink: 0;
+}
+
+.slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+/* Botones prev/next del slider */
+.slider-prev,
+.slider-next {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(247, 244, 239, 0.85);
+  border: 1px solid rgba(17, 17, 17, 0.15);
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 5;
+  opacity: 0;
+  transition: opacity 0.2s;
+  color: var(--black);
+  line-height: 1;
+  padding: 0;
+}
+
+.card-slider:hover .slider-prev,
+.card-slider:hover .slider-next { opacity: 1; }
+
+.slider-prev { left: 6px; }
+.slider-next { right: 6px; }
+
+/* Dots */
+.slider-dots {
+  position: absolute;
+  bottom: 8px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 5px;
+  z-index: 5;
+}
+
+.dot {
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.5);
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.dot.active {
+  background: #fff;
+  transform: scale(1.3);
+}
+
+/* ── Cuerpo de la card ── */
+.card-body {
+  padding: 0px 10px 10px 10px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.card-body h3 {
+  font-family: var(--font-serif);
+  font-size: 0.8rem;
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.card-body p {
+  font-size: 0.7rem;
+  line-height: 1.6;
+  color: #555;
+}
+
+.card-link-hint {
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #3535c8;
+  letter-spacing: 0.04em;
+  margin-top: auto;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+
+.card:hover .card-link-hint { opacity: 1; }
+
+.card-year {
+  position: absolute;
+  bottom: 12px;
+  right: 16px;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  color: #aaa;
+}
+
+
+/* ════════════════════════════════
+   PROJECTS — pantalla dividida
+   (texto + links de área | grid completo)
+════════════════════════════════ */
+.proyectos-intro p { margin-bottom: 20px; }
+
+/* Los links de área reutilizan el estilo .chip, pero en columna
+   y con más espacio de lectura ya que viven junto al texto */
+.proyectos-area-links {
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  margin-bottom: 28px;
+}
+.filter-chips.proyectos-area-links {
+  /* Compound selector para asegurar prioridad sobre la regla
+     genérica .filter-chips (definida más abajo en este archivo),
+     sin importar el orden de aparición en el CSS. */
+  flex-direction: column;
+  align-items: flex-start;
+}
+.proyectos-area-links .chip {
+  width: 100%;
+  text-align: left;
+  padding: 8px 14px;
+}
+
+/* Explicación conceptual de la tab activa (ver TAB_INTROS en
+   main.js). Un poco más chica y atenuada que el párrafo
+   introductorio general, para distinguirla como texto que
+   cambia dinámicamente al seleccionar una tab. */
+.tab-intro {
+  font-size: 0.82rem;
+  line-height: 1.5;
+  color: #555;
+  margin-bottom: 28px;
+  min-height: 3.6em;
+}
+
+.proyectos-grid-col {
+  flex: 1 1 50%;
+  overflow-y: auto;
+}
+.proyectos-grid-col .grid {
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+}
+
+@media (max-width: 768px) {
+  .filter-chips.proyectos-area-links { flex-direction: row; flex-wrap: wrap; }
+  .proyectos-area-links .chip { width: auto; text-align: center; }
+}
+
+
+/* ════════════════════════════════
+   BUSCADOR (página Proyectos)
+════════════════════════════════ */
+.search-bar {
+  margin: 10px 0 12px;
+}
+
+.search-input {
+  width: 100%;
+  max-width: 360px;
+  padding: 7px 12px;
+  border: 1px solid var(--stroke-input);
+  border-radius: 2px;
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.02em;
+  color: var(--black);
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.search-input::placeholder { color: #aaa; }
+
+.search-input:focus { border-color: #1aff6e; }
+
+
+/* ════════════════════════════════
+   CHIPS DE FILTRO (página Proyectos)
+════════════════════════════════ */
+.filter-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  padding-bottom: 2px;
+}
+
+.chip {
+  display: inline-block;
+  padding: 3px 12px;
+  border-radius: 2px;
+  border: 1px solid var(--stroke-input);
+  background: transparent;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.04em;
+  color: #555;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+}
+
+.chip:hover {
+  border-color: #1aff6e;
+  color: #1aff6e;
+}
+
+.chip.active {
+  background: #111;
+  border-color: #111;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
+  .page-header { flex-direction: column; gap: 12px; }
+}
+
+/* ════════════════════════════════
+   UTILIDADES
+════════════════════════════════ */
+.pill {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 20px;
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+}
+
+.muted  { color: #888; font-size: 0.85rem; }
+.mono   { font-family: var(--font-mono); }
+
+
+/* ════════════════════════════════
+   RESPONSIVE — MÓVIL
+════════════════════════════════ */
+@media (max-width: 768px) {
+  #left-nav {
+    left: -260px;
+    width: 260px;
+    transition: left 0.3s ease;
+    z-index: 200;
+  }
+  #left-nav.open { left: 0; }
+
+  #right-nav { display: none; }
+
+  #main { left: 0; right: 0; }
+
+  #menu-toggle { display: block; }
+
+  .split-page.active { flex-direction: column; }
+  .split-text {
+    padding: 28px 24px;
+    border-right: none;
+    border-bottom: 1px solid var(--black);
+    height: auto;
+    overflow-y: visible;
+  }
+  .split-image { min-height: 260px; flex: 0 0 260px; }
+  .split-projects {
+    height: auto;
+    overflow-y: visible;
+    min-height: 300px;
+  }
+
+  /* Columna del grid en Projects: en mobile fluye con el resto de la
+     página (una sola columna scrolleable) en vez de tener su propio
+     scroll interno de 50% de ancho. */
+  .proyectos-grid-col {
+    height: auto;
+    overflow-y: visible;
+    min-height: 300px;
+  }
+
+  .content-block { padding: 28px 24px; }
+  .page-header { padding: 20px 20px 14px; }
+}
+/* ── HOME: contenedor principal (ver regla #page-home arriba) ── */
+
+/* ── Vistas del home ── */
+.home-view {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.45s ease;
+}
+
+.home-view.active {
+  opacity: 1;
+  pointer-events: all;
+}
+
+/* ── Vista split dentro de home-view ── */
+#view-split {
+  display: flex;
+  min-height: 100%;
+}
+
+#view-split .split-text {
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+}
+#view-split .split-text::-webkit-scrollbar { display: none; }
+
+.split-projects {
+  flex: 1 1 50%;
+  overflow-y: auto;
+  height: 100%;
+  scrollbar-width: none;
+}
+.split-projects::-webkit-scrollbar { display: none; }
+
+.split-projects .grid {
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+}
+
+/* ── Vista Exploration Map ──
+   ✏️ CAMBIO: los círculos-texto dibujados en canvas se
+   reemplazaron por un overlay HTML real: por cada categoría,
+   imagen → label → números de hijos → gradiente. El canvas
+   (#bubble-canvas) se conserva SOLO para la cuadrícula de
+   fondo — ver _drawGrid() en main.js. */
+#view-bubbles {
+  background: #ffffff;
+}
+
+#bubble-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: block;
+}
+
+.bubble-categories-overlay {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* Cada categoría: bloque posicionado (rx/ry, seteado inline
+   desde JS) que agrupa gradiente+imagen + label + números, en
+   columna y centrado — composición vertical pedida: Categoría
+   → Imagen (con el gradiente detrás) → Números de hijos. Sin
+   inclinación: todo alineado recto (sin rotate). */
+.category-block {
+  position: absolute;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  transform: translate(-50%, -50%);
+  width: 168px;
+}
+
+/* Apila el gradiente y la imagen en el mismo lugar: el
+   gradiente queda DETRÁS (z-index menor) y más grande, así
+   asoma como un halo alrededor del recuadro de la imagen. */
+.category-tile-stack {
+  position: relative;
+  width: 148px;
+  height: 148px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* ✏️ Sin recuadro: la imagen PNG queda "suelta" sobre el
+   gradiente, sin borde, sombra ni fondo de caja. Si el PNG
+   tiene transparencia, el gradiente de atrás se ve a través. */
+.category-tile-wrap {
+  position: relative;
+  z-index: 1;
+  width: 200px;
+  height: 200px;
+}
+.category-tile-wrap.is-link { cursor: pointer; }
+.category-tile-wrap.bubble-no-link { cursor: default; }
+
+.category-tile {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+  transition: transform 0.4s ease;
+}
+.category-tile-wrap.is-link:hover .category-tile { transform: scale(1.05); }
+
+/* Label de categoría — fondo negro para legibilidad, integrado
+   sobre la imagen (pedido explícito del spec). */
+.category-label {
+  position: absolute;
+  left: 8px;
+  bottom: 8px;
+  max-width: calc(100% - 16px);
+  background: #000;
+  color: #fff;
+  font-family: var(--font-serif);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  padding: 4px 8px;
+  line-height: 1.2;
+}
+
+/* Números de los hijos de la categoría — mismo tratamiento de
+   fondo negro que el label, para que nunca se pierdan sobre la
+   cuadrícula o los gradientes vecinos. */
+.category-numbers {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 5px;
+  max-width: 168px;
+}
+
+.category-number {
+  background: #000;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 0.6rem;
+  letter-spacing: 0.03em;
+  border: none;
+  padding: 3px 6px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.category-number:hover { background: #3535c8; }
+
+/* Halo de gradiente detrás de la imagen — mismo centro, más
+   grande, sin interacción. */
+.category-gradient {
+  position: absolute;
+  z-index: 0;
+  top: 50%;
+  left: 50%;
+  width: 190px;
+  height: 190px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  border: 1.5px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Líneas que interconectan las categorías entre sí — debajo de
+   los bloques (imagen/label/números van siempre por encima). */
+.category-connections {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  overflow: visible;
+}
+.category-connections line {
+  stroke: #000;
+  stroke-width: 0.5;
+  stroke-dasharray: 3 3;
+  opacity: 0.35;
+}
+
+@media (max-width: 900px) {
+  .category-block { width: 140px; }
+  .category-tile-stack,
+  .category-tile-wrap { width: 120px; height: 120px; }
+  .category-gradient { width: 155px; height: 155px; }
+}
+
+/* Mobile: columna estática apilada (ya no absolute/rx-ry) —
+   prioriza legibilidad por sobre mantener la posición exacta
+   de desktop, tal como pide el spec, sin volverse una
+   cuadrícula convencional (sigue siendo una lista suelta, no
+   una tabla de columnas). Sin líneas de conexión: no hay
+   posiciones absolutas de las que trazarlas. */
+.bubble-categories-overlay.is-mobile {
+  position: static;
+  overflow-y: auto;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  padding: 28px 16px;
+  box-sizing: border-box;
+}
+.bubble-categories-overlay.is-mobile .category-block {
+  position: static;
+  transform: none;
+}
+
+/* ── Switch de vista ── */
+.view-switch {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 30;
+  display: none;
+  align-items: center;
+  background: var(--white);
+  border: 1px solid var(--stroke-input);
+  border-radius: 10px;
+  overflow: hidden;
+  font-family: var(--font-mono);
+}
+
+#page-home.active .view-switch {
+  display: flex;
+}
+
+.switch-btn {
+  padding: 4px 12px;
+  font-size: 0.6rem;
+  background: none;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #888;
+  letter-spacing: 0.06em;
+  transition: background 0.2s, color 0.2s;
+}
+
+.switch-btn.active {
+  background: #1f1f1f;
+  color: #fff;
+}
+
+/* ── TICKER / MARQUEE ── */
+#bottom-bar {
+  overflow: hidden;
+}
+
+.ticker-track {
+  display: flex;
+  gap: 8px;
+  white-space: nowrap;
+  animation: ticker 50s linear infinite;
+  align-items: center;
+  padding: 4px 0;
+}
+
+@keyframes ticker {
+  from { transform: translateX(100vw); }
+  to   { transform: translateX(-100%); }
+}
+
+
+/* ════════════════════════════════
+   PÁGINA DE PROYECTO INLINE
+   (cargada dinámicamente vía fetch)
+════════════════════════════════ */
+#page-proyecto {
+  overflow: hidden !important;
+  display: none;
+  flex-direction: column;
+}
+
+#page-proyecto.active {
+  display: flex;
+}
+
+/* El .project-split hereda los estilos de proyectos.css
+   que ya se carga en el <head> del index.html */
+#page-proyecto .project-split {
+  flex: 1;
+  height: 100%;
+  overflow: hidden;
+}
+
+/* ── Fix: scroll independiente en columnas de proyecto inline ── */
+#page-proyecto {
+  height: calc(100vh - var(--top-h) - var(--bot-h));
+}
+
+#page-proyecto .project-split {
+  display: flex;
+  height: 100%;
+  overflow: hidden;
+}
+
+#page-proyecto .project-col-text,
+#page-proyecto .project-col-images {
+  height: 100%;
+  overflow-y: auto;
+}
+
+/* ── Mobile: deshace el layout de columnas fijas ── */
+@media (max-width: 768px) {
+  #page-proyecto {
+    height: auto !important;
+    overflow: visible !important;
+    overflow-y: auto !important;
+    min-height: calc(100vh - var(--top-h) - var(--bot-h));
+  }
+
+  #page-proyecto .project-split {
+    display: block !important;
+    height: auto !important;
+    overflow: visible !important;
+  }
+
+  #page-proyecto .project-col-text,
+  #page-proyecto .project-col-images {
+    height: auto !important;
+    overflow-y: visible !important;
+    overflow: visible !important;
+    width: 100%;
+    display: block;
+  }
+
+  #page-proyecto .project-col-images {
+    min-height: unset;
+  }
+
+  #page-proyecto .project-img-block img {
+    width: 100%;
+    height: auto !important;
+    max-height: unset !important;
+    object-fit: contain;
+    display: block;
+  }
+
+  #page-proyecto .project-img-block {
+    min-height: unset !important;
+    padding: 16px;
+  }
+}
+
+/* Para que el texto principal quede encima */
+.split-text > * {
+  position: relative;
+  z-index: 2;
+}
+
+
+
+/* Buscador  */
+.nav-search { position: relative; padding: 0 16px 12px; }
+.nav-search input {
+  width: 100%;
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  padding: 6px 8px;
+  border: 1px solid var(--line);
+  background: transparent;
+}
+#nav-search-results {
+  display: none;
+  position: absolute;
+  top: 100%; left: 16px; right: 16px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  z-index: 20;
+  max-height: 200px;
+  overflow-y: auto;
+}
+#nav-search-results.open { display: block; }
+.nav-search-item {
+  padding: 6px 10px;
+  font-family: var(--font-mono);
+  font-size: 0.65rem;
+  cursor: pointer;
+}
+.nav-search-item:hover { background: #f0f0f0; }
+.nav-search-empty { color: #aaa; cursor: default; }
+.nav-search-empty:hover { background: none; }
+
+
+/* ════════════════════════════════════════════════════════
+   SELECTOR DE IDIOMA (ES/EN)
+   ────────────────────────────────────────────────────────
+   Botón simple en el top-bar. El texto lo actualiza
+   setLanguage() en i18n.js (muestra el idioma AL QUE SE
+   puede cambiar).
+════════════════════════════════════════════════════════ */
+#lang-toggle {
+  font-family: var(--font-mono);
+  font-size: 0.62rem;
+  letter-spacing: 0.08em;
+  background: none;
+  border: 1px solid var(--black);
+  border-radius: 2px;
+  padding: 2px 8px;
+  cursor: pointer;
+  color: var(--black);
+  transition: background 0.15s, color 0.15s;
+}
+#lang-toggle:hover { background: var(--black); color: var(--white); }
+
+
+/* ════════════════════════════════════════════════════════
+   SCROLLBARS INVISIBLES (requisito transversal del sitio)
+   ────────────────────────────────────────────────────────
+   Oculta la barra de scroll visualmente en todos los
+   contenedores que scrollean, manteniendo el scroll
+   funcional (rueda, touch, teclado) en Chrome/Edge/Safari
+   (::-webkit-scrollbar) y Firefox (scrollbar-width).
+   Los contenedores de columnas de proyecto (.project-col-text/
+   .project-col-images) ya tenían esto en proyectos.css; acá
+   cubrimos el resto del layout: nav lateral, contenedor
+   principal, columnas de texto de páginas split, resultados
+   del buscador y el header de la grilla de Proyectos.
+════════════════════════════════════════════════════════ */
+#left-nav,
+#main,
+.split-text,
+.page-header,
+#nav-search-results {
+  scrollbar-width: none;      /* Firefox */
+  -ms-overflow-style: none;   /* Edge legacy */
+}
+#left-nav::-webkit-scrollbar,
+#main::-webkit-scrollbar,
+.split-text::-webkit-scrollbar,
+.page-header::-webkit-scrollbar,
+#nav-search-results::-webkit-scrollbar {
+  display: none;               /* Chrome / Safari / Edge Chromium */
+  width: 0;
+  height: 0;
+}
+
+/* ════════════════════════════════════════════════════════
+   CONTRASTE AUTOMÁTICO (requisito transversal del sitio)
+   ────────────────────────────────────────────────────────
+   contrast.js agrega esta clase cuando detecta texto con
+   contraste insuficiente sobre un fondo oscuro. Solo cambia
+   el color del texto — nada más del componente se toca.
+════════════════════════════════════════════════════════ */
+.cw-inverted {
+  color: #ffffff !important;
+}
+
+
+/* ════════════════════════════════════════════════════════
+   CONTENIDO BILINGÜE INLINE (.i18n-es / .i18n-en)
+   ────────────────────────────────────────────────────────
+   Para páginas de proyecto que ya traen el texto redactado
+   en los dos idiomas (en vez de depender de data-i18n),
+   se envuelve cada versión en un bloque con esta clase y el
+   idioma activo (html[lang]) decide cuál se muestra. Como
+   setLanguage() en i18n.js ya hace
+   document.documentElement.setAttribute('lang', lang), esto
+   funciona sin JS adicional.
+   ✏️  Úsalo para evitar duplicar bloques completos (con su
+   propio borde/separador) cuando un proyecto tenga texto en
+   ambos idiomas — ver Proyectos/derivas.html.
+════════════════════════════════════════════════════════ */
+html:not([lang="en"]) .i18n-en { display: none; }
+html[lang="en"] .i18n-es { display: none; }
+
+
+/* ════════════════════════════════════════════════════════
+   HOME — VISTA "ÍNDICE" (3ra opción del switch, antes "grid")
+   ────────────────────────────────────────────────────────
+   Lista/tabla editorial: una fila por cada entrada del sitio
+   (Projects, Graphics, Texts, Laboratories, Research), con
+   4 columnas — nombre · categoría · tema · año — siguiendo la
+   referencia de un índice de programas académicos. Ver
+   buildHomeGrid() en main.js.
+════════════════════════════════════════════════════════ */
+.editorial-list {
+  height: 100%;
+  overflow-y: auto;
+  scrollbar-width: none;
+  padding: 32px 40px;
+  box-sizing: border-box;
+}
+.editorial-list::-webkit-scrollbar { display: none; }
+
+.editorial-row {
+  display: grid;
+  grid-template-columns: 2.2fr 1fr 1fr 0.6fr;
+  align-items: baseline;
+  gap: 18px;
+  width: 100%;
+  padding: 20px 0;
+  border-top: 1px solid var(--black);
+  background: none;
+  border-left: none;
+  border-right: none;
+  border-bottom: none;
+  text-align: left;
+  font: inherit;
+  color: inherit;
+  cursor: default;
+}
+.editorial-list .editorial-row:last-child { border-bottom: 1px solid var(--black); }
+
+.editorial-row[data-clickable="true"] {
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+.editorial-row[data-clickable="true"]:hover { background: #f4f4f4; }
+
+/* Encabezado de columnas: mismas 4 columnas, texto chico en
+   mayúsculas para distinguirlo de las filas de contenido. */
+.editorial-head {
+  border-top: none;
+  padding-top: 0;
+  padding-bottom: 12px;
+}
+.editorial-head .editorial-cell {
+  font-family: var(--font-mono);
+  font-size: 0.58rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.editorial-cell { min-width: 0; }
+
+.editorial-name {
+  font-family: var(--font-serif);
+  font-size: 1.15rem;
+  font-weight: 500;
+  line-height: 1.2;
+}
+
+.editorial-category,
+.editorial-tema {
+  font-family: var(--font-mono);
+  font-size: 0.68rem;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: #555;
+}
+
+.editorial-year {
+  font-family: var(--font-mono);
+  font-size: 0.7rem;
+  color: #999;
+  text-align: right;
+}
+
+@media (max-width: 900px) {
+  .editorial-list { padding: 24px 20px; }
+  .editorial-row { grid-template-columns: 1.8fr 1fr 0.8fr; }
+  .editorial-row .editorial-tema { display: none; }
+}
+@media (max-width: 560px) {
+  .editorial-list { padding: 18px 14px; }
+  .editorial-row {
+    grid-template-columns: 1fr;
+    gap: 4px;
+    padding: 16px 0;
+  }
+  .editorial-name { font-size: 1rem; }
+  .editorial-category { order: 2; }
+  .editorial-year { text-align: left; order: 3; }
+  .editorial-head { display: none; }
+}

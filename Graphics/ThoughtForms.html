@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  ══════════════════════════════════════════════════════
+  PÁGINA DE GRAPHICS — Thought Forms  (ARCHIVO DUMMY)
+  ──────────────────────────────────────────────────────
+  Igual que las páginas de Proyectos: index.html hace fetch
+  de este archivo y extrae .project-split para embeberlo.
+  También funciona standalone si se abre directo.
+
+  ✏️  EDITA: el contenido dentro de .project-split.
+  ✏️  Para agregar imágenes a la grilla:
+      1. Copia un bloque <div class="tf-grid-item">.
+      2. Cambia data-year al año correspondiente (debe existir
+         un chip con ese año en .tf-year-filter, o agrega uno).
+      3. Cambia data-caption por el pie de foto.
+      4. En el <img>: src = miniatura, data-full = imagen grande
+         (puede ser la misma ruta si no tienes una versión HD).
+  La lógica de filtro + lightbox ya funciona sola (_initTFGrid()
+  en main.js) apenas la estructura de clases coincide. No editar JS.
+══════════════════════════════════════════════════════
+-->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thought Forms</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="../style.css">
+  <link rel="stylesheet" href="../Proyectos/proyectos.css">
+  <style>
+    body:not(.embedded) { opacity: 0; animation: bodyFadeIn 0.45s ease 0.05s forwards; }
+    @keyframes bodyFadeIn { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: translateY(0); } }
+    body.embedded #top-bar, body.embedded #left-nav, body.embedded #right-nav,
+    body.embedded #bottom-bar, body.embedded #overlay { display: none !important; }
+    body.embedded #main { top: 0; left: 0; right: 0; bottom: 0; }
+  </style>
+</head>
+
+<body class="project-page">
+
+  <!-- NAV STANDALONE (se ignora cuando se embebe en el portafolio) -->
+  <header id="top-bar">
+    <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
+    <div id="top-right">
+      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <span id="clock">00:00</span>
+    </div>
+  </header>
+  <nav id="left-nav">
+    <ul>
+      <li class="nav-section"><a href="../index.html">— Home</a></li>
+      <li class="nav-section active"><a href="../index.html?filter=graphics">— Graphics</a></li>
+      <li class="nav-section"><a href="../index.html?page=about">About</a></li>
+    </ul>
+    <div class="nav-project-label">
+      <p>Viendo ahora</p>
+      <p>Thought Forms</p>
+    </div>
+  </nav>
+  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <div id="overlay" onclick="closeMobileNav()"></div>
+
+  <main id="main">
+
+    <div class="project-split">
+
+      <!-- COLUMNA IZQUIERDA — texto -->
+      <div class="project-col-text">
+        <div class="project-header">
+          <div class="project-meta">
+            <span class="pill" style="background:#c3afff">graphics</span>
+            <span class="project-year">2020 — ongoing</span>
+          </div>
+          <h1>Thought Forms</h1>
+          <p class="project-lead">
+            Serie en desarrollo continuo. [Reemplaza este texto con la descripción
+            real del proyecto: técnica, intención, contexto de exhibición.]
+          </p>
+        </div>
+        <div class="project-ficha">
+          <dl>
+            <dt>Year</dt>       <dd>2020 - Ongoing</dd>
+            <dt>Category</dt>   <dd>Graphics / Draws</dd>
+            <dt>Technique</dt>  <dd>[técnica]</dd>
+          </dl>
+        </div>
+      </div>
+
+      <!-- COLUMNA DERECHA — grid de imágenes con filtro por año + lightbox -->
+      <div class="project-col-images">
+        <div class="tf-year-filter">
+          <button class="tf-year-chip active" data-year="all">Todos</button>
+          <button class="tf-year-chip" data-year="2025">2025</button>
+          <button class="tf-year-chip" data-year="2024">2024</button>
+        </div>
+
+        <div class="tf-grid">
+          <!-- ✏️ PEGA AQUÍ TUS IMÁGENES (ver instrucciones arriba) -->
+          <div class="tf-grid-item" data-year="2025" data-caption="Reemplaza por el pie de foto">
+            <img src="../Imagen/placeholder.png" data-full="../Imagen/placeholder.png" alt="Thought Forms">
+          </div>
+          <div class="tf-grid-item" data-year="2024" data-caption="Reemplaza por el pie de foto">
+            <img src="../Imagen/placeholder.png" data-full="../Imagen/placeholder.png" alt="Thought Forms">
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /project-split -->
+
+    <!-- Visor ampliado (lightbox): se mueve a <body> automáticamente por JS -->
+    <div class="tf-lightbox">
+      <button class="tf-lightbox-close" aria-label="Cerrar">×</button>
+      <button class="tf-lightbox-prev" aria-label="Anterior">‹</button>
+      <img src="" alt="">
+      <p class="tf-lightbox-caption"></p>
+      <button class="tf-lightbox-next" aria-label="Siguiente">›</button>
+    </div>
+
+  </main>
+
+  <footer id="bottom-bar">
+    <span class="pill" style="background:#bde4be">Last update 08-10-26</span>
+  </footer>
+
+  <script src="../i18n.js"></script>
+  <script src="../main.js"></script>
+  <script src="../contrast.js"></script>
+</body>
+</html>
