@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!--
   ══════════════════════════════════════════════════════
   PÁGINA DE GRAPHICS — Thought Forms  (ARCHIVO DUMMY)
@@ -43,22 +43,22 @@
   <header id="top-bar">
     <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
     <div id="top-right">
-      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <a class="back-link" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
       <span id="clock">00:00</span>
     </div>
   </header>
   <nav id="left-nav">
     <ul>
       <li class="nav-section"><a href="../index.html">— Home</a></li>
-      <li class="nav-section active"><a href="../index.html?filter=graphics">— Graphics</a></li>
+      <li class="nav-section active"><a href="../index.html">— Graphics</a></li>
       <li class="nav-section"><a href="../index.html?page=about">About</a></li>
     </ul>
     <div class="nav-project-label">
-      <p>Viendo ahora</p>
+      <p>Currently viewing</p>
       <p>Thought Forms</p>
     </div>
   </nav>
-  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <aside id="right-nav"><span id="right-nav-label">Explore</span></aside>
   <div id="overlay" onclick="closeMobileNav()"></div>
 
   <main id="main">
@@ -82,7 +82,7 @@
           <dl>
             <dt>Year</dt>       <dd>2020 - Ongoing</dd>
             <dt>Category</dt>   <dd>Graphics / Draws</dd>
-            <dt>Technique</dt>  <dd>[técnica]</dd>
+            <dt>Technique</dt>  <dd>[technique]</dd>
           </dl>
         </div>
       </div>
@@ -90,7 +90,7 @@
       <!-- COLUMNA DERECHA — grid de imágenes con filtro por año + lightbox -->
       <div class="project-col-images">
         <div class="tf-year-filter">
-          <button class="tf-year-chip active" data-year="all">Todos</button>
+          <button class="tf-year-chip active" data-year="all">All</button>
           <button class="tf-year-chip" data-year="2025">2025</button>
           <button class="tf-year-chip" data-year="2024">2024</button>
         </div>
@@ -98,7 +98,7 @@
         <div class="tf-grid">
           <!-- ✏️ PEGA AQUÍ TUS IMÁGENES (ver instrucciones arriba) -->
           <div class="tf-grid-item" data-year="2025" data-caption="Reemplaza por el pie de foto">
-            <img src="../Imagen/placeholder.png" data-full="../Imagen/placeholder.png" alt="Thought Forms">
+            <img src="https://raw.githubusercontent.com/expanded-interface/PRTFL_ASSETS/main/Draws/01/csc_01.jpg" data-full="https://raw.githubusercontent.com/expanded-interface/PRTFL_ASSETS/main/Draws/01/csc_01.jpg" alt="Thought Forms">
           </div>
           <div class="tf-grid-item" data-year="2024" data-caption="Reemplaza por el pie de foto">
             <img src="../Imagen/placeholder.png" data-full="../Imagen/placeholder.png" alt="Thought Forms">
@@ -125,6 +125,5 @@
 
   <script src="../i18n.js"></script>
   <script src="../main.js"></script>
-  <script src="../contrast.js"></script>
-</body>
+  </body>
 </html>

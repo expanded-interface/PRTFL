@@ -1,19 +1,24 @@
 /* ════════════════════════════════════════════════════════
    i18n.js
    ────────────────────────────────────────────────────────
-   ✏️ AJUSTE: el sitio ya no tiene selector de idioma ni
-   traducción al inglés (se eliminó por pedido explícito).
-   Este archivo se conserva —con el mismo nombre y la misma
-   API (t(), applyI18n())— porque main.js y todas las páginas
-   de proyecto lo siguen usando como fuente única de los
-   textos fijos de la interfaz (vía atributos data-i18n en el
-   HTML). Así se evita reescribir a mano decenas de textos
-   repartidos en index.html y en cada página de proyecto.
+   ✏️ El sitio no tiene selector de idioma ni traducción
+   multi-idioma (se eliminó en una iteración anterior). Este
+   archivo se conserva —con el mismo nombre y la misma API
+   (t(), applyI18n())— porque main.js y todas las páginas de
+   proyecto lo siguen usando como fuente ÚNICA de los textos
+   fijos de la interfaz (vía atributos data-i18n en el HTML).
+   Así se evita repetir a mano los mismos textos en index.html
+   y en cada página de proyecto. El idioma de la interfaz es
+   inglés en su totalidad; el contenido específico de cada
+   proyecto (textos, documentación, investigación) que esté
+   escrito en español se mantiene tal cual — no vive en este
+   diccionario, sino directamente en el HTML de cada proyecto.
 
-   Ya NO existe: diccionario en inglés, botón #lang-toggle,
-   setLanguage()/toggleLanguage(), localStorage de idioma, y
-   el evento 'languagechange'. Todo el sitio queda fijo en
-   español.
+   ✏️ LIMPIEZA: se quitaron las claves que solo alimentaban
+   páginas ya removidas (Projects/Texts/Workshops como
+   landing pages, el sistema anterior de burbujas por
+   categoría, y las cards con imagen del grid de Projects) —
+   ver README para más contexto de qué se eliminó y por qué.
 ════════════════════════════════════════════════════════ */
 
 const translations = {
@@ -25,68 +30,38 @@ const translations = {
   nav_workshops: 'LABORATORIES',
   nav_research: 'RESEARCH',
   nav_about: 'ABOUT+STATEMENT',
-  menu_toggle: 'Menú',
+  menu_toggle: 'Menu',
 
   // ── Buscador ──
-  nav_search_placeholder: 'Buscar…',
-  proyectos_search_placeholder: 'Buscar por palabra clave, año, tag o día…',
-  search_no_results: 'Sin resultados',
+  nav_search_placeholder: 'Search…',
 
   // ── Home ──
-  home_view_map: 'Mapa de exploración',
-  home_view_about: 'Sobre mí',
-
-  // ── Proyectos ──
-  proyectos_title: 'Proyectos',
-  proyectos_intro_text: 'Tres áreas de trabajo atraviesan mi práctica. Cada una agrupa proyectos con una pregunta o método en común — haz clic en cualquiera para filtrar la grilla.',
-  chip_all: 'Todos',
-  chip_invisible_tech: 'Invisible Technologies',
-  chip_digital_eco: 'Digital Ecologies',
-  chip_social_labs: 'Social Interfaces',
-
-  // ── Texts ──
-  texts_title: 'Texts',
-  texts_intro: 'Próximas exposiciones, residencias y eventos.',
+  home_view_map: 'Exploration map',
+  home_view_grid: 'Index',
+  home_view_about: 'About',
 
   // ── Research / Workshops (placeholder) ──
   research_title: 'Research',
-  under_construction: 'En construcción',
-  workshops_title: 'Laboratories',
+  under_construction: 'Under construction',
 
   // ── About ──
   about_title: 'Bio',
-  about_bio_p1: 'Soy Natalia Cabrera, artista de medios, diseñadora XR y cineasta. Mi trabajo une arte, tecnología y ecología a través de experiencias XR, instalaciones interactivas, inteligencia artificial y arte textil. Exploro formas de relación entre lo humano y lo no-humano desarrollando proyectos que combinan entornos inmersivos, datos sensoriales y materiales físicos. Mi trabajo se ha presentado en contextos de arte, ciencia y cine, incluyendo el Sundance Film Festival, la Bienal de Venecia, CPH:DOX, Berlin Science Week, la Bienal Chilena de Artes Mediales, el Festival de la Imagen, entre otros. Soy cofundadora y directora creativa de Nanai Studio, un espacio interdisciplinario centrado en arte, tecnología y naturaleza. Actualmente vivo entre Barcelona, Santiago y el internet.',
-  about_bio_p2: 'Ha participado en residencias artísticas en Latinoamérica y Europa.',
-  about_quote: 'Una forma de aprender desde cero a cuidar los propios sueños.',
-  about_cv_link: 'Puedes ver mi CV aquí',
+  about_bio_p1: "I'm Natalia Cabrera media artist, XR designer and filmmaker. My work brings together art, technology and ecology through XR experiences, interactive installations, artificial intelligence and textile art. I explore ways of relating between the human and the non-human by developing projects that combine immersive environments, sensory data, and physical materials. My work has been presented in contexts of art, science, and cinema, including Sundance Film Festival, Venice Biennale, CPH:DOX, Berlin Science Week, the Chilean Biennial of Media Arts, Festival de la Imagen, among others. I'm the co-founder and creative director of Nanai Studio, an interdisciplinary space focused on art, technology, and nature. I currently live between Barcelona, Santiago, and the internet.",
+  about_bio_p2: "She has taken part in artist residencies across Latin America and Europe.",
+  about_quote: "A way of learning, from scratch, to take care of one's own dreams.",
+  about_cv_link: 'You can check my CV here',
 
   // ── Footer ──
-  footer_handcrafted: 'Sitio hecho a mano',
-  footer_updated: 'Actualizado 07-28-26',
-  footer_location: 'Basada en Los Lagos, CL',
-
-  // ── Cards (generadas dinámicamente por main.js) ──
-  card_view_project: 'Ver proyecto →',
-  card_no_image: 'sin imagen',
+  footer_updated: 'Updated 07-28-26',
+  footer_location: 'Based in Los Lagos, CL',
 
   // ── Misceláneo ──
-  portrait_label: 'retrato',
+  portrait_label: 'portrait',
   page_title: 'Camila S Caicedo - Portfolio',
 
-  // ── Home: tercera opción del switch (antes "grid", ahora lista editorial) ──
-  home_view_grid: 'Índice',
-  grid_no_image: 'sin imagen',
-
-  // ── Exploration Map: categorías principales (burbujas padre) ──
-  map_cat_projects: 'PROJECTS',
-  map_cat_graphics: 'GRAPHICS',
-  map_cat_texts: 'TEXTS',
-  map_cat_workshops: 'LABORATORIES',
-  map_cat_research: 'RESEARCH',
-
   // ── Estados de carga ──
-  loading_label: 'Cargando…',
-  back_to_portfolio: '← volver al portafolio',
+  loading_label: 'Loading…',
+  back_to_portfolio: '← back to portfolio',
 };
 
 /* Helper para pedir un texto desde JS (contenido dinámico).
@@ -99,9 +74,9 @@ function t(key) {
 /* Aplica los textos fijos a cualquier nodo del DOM marcado con
    data-i18n / data-i18n-placeholder / data-i18n-title. Se llama
    una sola vez por cada bloque de contenido que main.js genera
-   (nav, cards, proyecto cargado por fetch, etc.) — ya no hay que
-   volver a llamarla al cambiar de idioma porque el idioma ya
-   no cambia. */
+   (nav, listas, proyecto cargado por fetch, etc.) — no hay
+   selector de idioma, así que esto corre una sola vez por
+   bloque de contenido nuevo. */
 function applyI18n(root) {
   root = root || document;
   root.querySelectorAll('[data-i18n]').forEach(el => {
@@ -120,10 +95,10 @@ function applyI18n(root) {
   }
 }
 
-/* Aplica los textos apenas carga el DOM (antes esto lo hacía
-   setLanguage(), que ya no existe) y fija <html lang="es">. */
+/* Aplica los textos apenas carga el DOM y fija <html lang="en">
+   (la interfaz del sitio es en inglés en su totalidad). */
 document.addEventListener('DOMContentLoaded', () => {
-  document.documentElement.setAttribute('lang', 'es');
+  document.documentElement.setAttribute('lang', 'en');
   applyI18n(document);
   document.title = t('page_title');
 });

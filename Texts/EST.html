@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!--
   ══════════════════════════════════════════════════════
   WEB ESSAY — Escuela de sensibilización tecnológica (ARCHIVO DUMMY)
@@ -29,20 +29,17 @@
 </head>
 <body>
   <div class="essay">
-    <a class="back" href="../index.html?page=texts" data-i18n="back_to_portfolio">← volver al portafolio</a>
+    <a class="back" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
     <h1>Escuela de sensibilización tecnológica</h1>
     <p class="meta">Web Essay — 2025</p>
     <p>
-      [Reemplaza este párrafo con el contenido real del ensayo. Este archivo
-      es un dummy funcional: ya está conectado desde el nav lateral y desde
-      la página Texts, y se abre en una pestaña nueva tal como pide el spec.]
+      [Replace this paragraph with the real essay content. This file is a
+      functional dummy: it is already wired up from the side nav and opens
+      in a new tab, as the spec requires.]
     </p>
   </div>
-  <!-- i18n.js + contrast.js: esta página abre standalone en pestaña
-       nueva, pero igual respeta el idioma elegido en el portafolio
-       (localStorage) y el detector de contraste — requisito
-       transversal a todo el sitio, no solo al layout con nav. -->
+  <!-- i18n.js: traduce el link "back to portfolio" (data-i18n) —
+       requisito transversal a todo el sitio, no solo al layout con nav. -->
   <script src="../i18n.js"></script>
-  <script src="../contrast.js"></script>
-</body>
+  </body>
 </html>

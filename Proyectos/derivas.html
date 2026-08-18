@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!--
   ══════════════════════════════════════════════════════
   PÁGINA DE PROYECTO — Voces del humedal
@@ -48,38 +48,32 @@
 
   <!-- NAV STANDALONE — solo visible si abres el .html directamente --------------------------------------------------->
   <header id="top-bar">
-    <div id="logo" onclick="window.location.href='../index.html'">Nombre</div>
+    <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
     <div id="top-right">
-      <button id="menu-toggle" onclick="toggleMobileNav()">Menú</button>
-      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <button id="menu-toggle" data-i18n="menu_toggle" onclick="toggleMobileNav()">Menu</button>
+      <a class="back-link" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
       <span id="clock">00:00</span>
     </div>
   </header>
 
+  <!-- ✏️ LIMPIEZA: el nav standalone tenía una rama "Texts" con
+       links muertos (Residencias/ComunnitaryLog/Calendario) a
+       páginas que nunca existieron. Se reemplazó por el mismo nav
+       simple y correcto que usan el resto de las páginas de
+       proyecto standalone (Home / Projects / About). -->
   <nav id="left-nav">
     <ul>
       <li class="nav-section"><a href="../index.html">— Home</a></li>
-      <li class="nav-section active" id="nav-proyectos-group">
-        <span onclick="toggleGroup('nav-proyectos-group')">— Proyectos</span>
-        <ul class="nav-children open" id="children-nav-proyectos-group"></ul>
-      </li>
-      <li class="nav-section" id="nav-community-group">
-        <span onclick="toggleGroup('nav-community-group')">— Texts</span>
-        <ul class="nav-children open" id="children-nav-community-group">
-          <li class="nav-branch"><a href="../index.html?page=residencias">Residencias</a></li>
-          <li class="nav-branch"><a href="../index.html?page=ComunnitaryLog">ComunnitaryLog</a></li>
-          <li class="nav-branch last"><a href="../index.html?page=calendario">Calendario</a></li>
-        </ul>
-      </li>
+      <li class="nav-section active"><a href="../index.html">— Projects</a></li>
       <li class="nav-section"><a href="../index.html?page=about">About</a></li>
     </ul>
     <div class="nav-project-label">
-      <p>Viendo ahora</p>
-      <p>Voces del humedal</p>
+      <p>Currently viewing</p>
+      <p>Deriva Lab</p>
     </div>
   </nav>
 
-  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <aside id="right-nav"><span id="right-nav-label">Explore</span></aside>
   <div id="overlay" onclick="closeMobileNav()"></div>
 
   <main id="main">
@@ -96,7 +90,7 @@
 
         <div class="project-header">
           <div class="project-meta">
-            <span class="pill" style="background:linear-gradient(135deg, #87cefb, #f9fdff, #87cefb)">colaboración</span>
+            <span class="pill" style="background:linear-gradient(135deg, #87cefb, #f9fdff, #87cefb)">Collaboration</span>
             <span class="project-year">2025</span>
           </div>
           <!-- ✏️ Título del proyecto -->
@@ -109,41 +103,19 @@
           </blockquote>
         </div>
 
-        <!-- ✏️ AJUSTE: antes había DOS bloques .project-text apilados
-             (uno "En" y otro "Es"), cada uno con su propio borde
-             inferior — eso generaba una línea divisoria de más
-             entre ambos, visible incluso aunque solo uno de los
-             dos textos fuera relevante en cada idioma. Ahora es
-             UN SOLO bloque .project-text (un solo borde, como en
-             el resto de la ficha) y adentro, dos versiones del
-             mismo párrafo envueltas en .i18n-en / .i18n-es: el
-             CSS global (ver style.css) muestra una sola según el
-             idioma activo (html[lang]), sincronizado con el mismo
-             botón EN/ES del top-bar — sin JS adicional. -->
+        <!-- ✏️ LIMPIEZA: antes este bloque envolvía dos versiones del
+             mismo párrafo (.i18n-en / .i18n-es) que se mostraban según
+             html[lang] — mecanismo que dependía del selector de idioma
+             que ya no existe en el sitio (ver i18n.js). Como resultado,
+             la versión en inglés había quedado inalcanzable (siempre
+             oculta) y duplicada sin uso real. Se dejó solo el texto en
+             español: es contenido propio del proyecto, no interfaz, así
+             que se conserva tal cual (spec: "project-specific Spanish
+             texts... should remain in Spanish"). lang="es" ayuda a
+             lectores de pantalla ya que el resto de la página es en
+             inglés. -->
         <div class="project-text">
-          <div class="i18n-en">
-          <p>
-            Sensitive Cartographies is a self-organized collective mapping project that invites participants 
-            to explore spaces through psychogeography and the creation of invisible maps.
-            <br>
-            <br>
-            Through walks guided by a series of actions, questions, and observation exercises, participants are 
-            encouraged to experience the body as an interface mediating between perception and environment. 
-            Along these journeys, traces are gathered through audio and video recordings, stamps, drawings, 
-            writing, and other forms of sensory documentation.
-            <br>
-            <br>
-            These materials come together as a collective archive that captures dimensions of territory often 
-            overlooked by conventional cartographic systems of representation: affects, atmospheres, encounters, and imaginaries.
-            <br>
-            <br>
-            In this way, Sensitive Cartographies explores alternative ways of inhabiting, reading, and representing space, 
-            producing cartographies that emerge from situated experience, embodied perception, and the collective construction 
-            of meaning.
-          </p>
-          </div>
-          <div class="i18n-es">
-          <p>
+          <p lang="es">
             Cartografías Sensibles es un proyecto autogestionado de mapeo colectivo que propone recorrer espacios desde 
             la psicogeografía y la creación de mapas que capturan lo invisible. 
             <br>
@@ -163,7 +135,6 @@
             produciendo cartografías que emergen desde la experiencia situada, la percepción y la construcción 
             colectiva de sentido.
           </p>
-          </div>
         </div>
 
         <div class="project-ficha">
@@ -198,7 +169,7 @@
               <circle cx="8.5" cy="8.5" r="1.5"/>
               <path d="M21 15l-5-5L5 21"/>
             </svg>
-            <span>imagen secundaria</span>
+            <span>secondary image</span>
           </div>
           <p class="img-caption">Redes extendidas al sol, humedal río Damas, 2022.</p>
         </div>
@@ -211,7 +182,7 @@
               <circle cx="8.5" cy="8.5" r="1.5"/>
               <path d="M21 15l-5-5L5 21"/>
             </svg>
-            <span>imagen terciaria</span>
+            <span>tertiary image</span>
           </div>
           <p class="img-caption">Fanzine impreso, 32 páginas, dic. 2022.</p>
         </div>
@@ -231,18 +202,6 @@
   <!-- i18n.js antes que main.js, igual que en index.html (ver ese archivo) -->
   <script src="../i18n.js"></script>
   <script src="../main.js"></script>
-  <script src="../contrast.js"></script>
-  <script>
-    document.addEventListener('DOMContentLoaded', () => {
-      const links = document.querySelectorAll('#children-nav-proyectos-group a');
-      links.forEach(a => {
-        if (a.href.includes('Voces_del_humedal')) {
-          a.style.color = '#3535c8';
-          a.style.fontWeight = '500';
-        }
-      });
-    });
-  </script>
 
 </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,10 +19,11 @@
   <header id="top-bar">
     <div id="logo" onclick="navigate('home')"> Camila S Caicedo </div>
     <div id="top-right">
-      <!-- ✏️ Se eliminó el selector de idioma ES/EN: el sitio
-           quedó fijo en español, sin toggle ni funcionalidad
-           de traducción (ver i18n.js). -->
-      <button id="menu-toggle" data-i18n="menu_toggle" onclick="toggleMobileNav()">Menú</button>
+      <!-- ✏️ El sitio no tiene selector de idioma: la interfaz
+           queda fija en inglés (ver i18n.js). i18n.js se conserva
+           igual como fuente única de los textos fijos de la UI
+           (vía data-i18n), no como un traductor multi-idioma. -->
+      <button id="menu-toggle" data-i18n="menu_toggle" onclick="toggleMobileNav()">Menu</button>
       <span>𓇢𓆸</span>
       <!-- Reloj: siempre en horario de Chile (America/Santiago), ver updateClock() en main.js -->
       <span id="clock">00:00</span>
@@ -39,7 +40,7 @@
     <!-- Buscador global de la navbar: combina año, día, palabra clave
          y tag en una sola caja (ver initNavSearch() en main.js).
          Ej: "2025 fotografía" filtra por año 2025 Y la palabra fotografía. -->
-    <input type="text" id="nav-search-input" data-i18n-placeholder="nav_search_placeholder" placeholder="Buscar…" autocomplete="off">
+    <input type="text" id="nav-search-input" data-i18n-placeholder="nav_search_placeholder" placeholder="Search…" autocomplete="off">
     <div id="nav-search-results"></div>
     </div>
 
@@ -53,10 +54,15 @@
 
 
       <!-- ── PROJECTS ── -------------->
+      <!-- ✏️ Categoría "padre": ya no navega a una página propia
+           (antes llamaba navigate('proyectos') y abría un landing
+           con grid/filtros). Clic solo expande/colapsa sus hijos —
+           mismo comportamiento que Graphics siempre tuvo. Cada hijo
+           lleva a su propia página vía main.js#buildNavList(). -->
       <!-- data-nav-group agrupa esta rama para el acordeón: al abrirla,
            toggleGroup() cierra automáticamente cualquier otra rama abierta -->
       <li class="nav-section" id="nav-proyectos" data-nav-group="nav-proyectos-group">
-        <span onclick="toggleGroup('nav-proyectos-group'); navigate('proyectos')"><span data-i18n="nav_projects">— PROJECTS</span>
+        <span onclick="toggleGroup('nav-proyectos-group')"><span data-i18n="nav_projects">— PROJECTS</span>
           <span class="nav-count" id="count-proyectos"></span></span>
         <ul class="nav-children" id="children-nav-proyectos-group">
           <!-- Los proyectos se inyectan automáticamente desde main.js -->
@@ -64,14 +70,9 @@
       </li>
 
 
-      <!-- ✏️ LIMPIEZA: se quitó un bloque de nav oculto (display:none)
-           con links muertos a páginas que no existen (residencias,
-           ComunnitaryLog, calendario) — funcionalidad basura que
-           nunca era visible ni alcanzable. -->
-
       <!-- ── GRAPHICS ── ----------------->
       <li class="nav-section" id="nav-graphics" data-nav-group="nav-graphics-group">
-        <span onclick="toggleGroup('nav-graphics-group'); navigate('graphics')"><span data-i18n="nav_graphics">— GRAPHICS</span>
+        <span onclick="toggleGroup('nav-graphics-group')"><span data-i18n="nav_graphics">— GRAPHICS</span>
           <span class="nav-count" id="count-graphics"></span></span>
         <ul class="nav-children" id="children-nav-graphics-group">
           <!-- Los textos se inyectan automáticamente desde main.js -->
@@ -80,8 +81,11 @@
 
 
       <!-- ── TEXTS ── ----------------->
+      <!-- ✏️ También "padre": ya no navega a page-texts (removida).
+           Sus hijos abren en pestaña nueva (standalone: true en
+           main.js), no se embeben en el portafolio. -->
       <li class="nav-section" id="nav-texts" data-nav-group="nav-texts-group">
-        <span onclick="toggleGroup('nav-texts-group'); navigate('texts')"><span data-i18n="nav_texts">— Texts</span> <span class="nav-count" id="count-texts"></span></span>
+        <span onclick="toggleGroup('nav-texts-group')"><span data-i18n="nav_texts">— Texts</span> <span class="nav-count" id="count-texts"></span></span>
         <ul class="nav-children" id="children-nav-texts-group">
           <!-- Los textos se inyectan automáticamente desde main.js -->
         </ul>
@@ -90,7 +94,7 @@
 
       <!-- ── WORKSHOPS ── ----------------->
       <li class="nav-section" id="nav-workshops" data-nav-group="nav-workshops-group">
-        <span onclick="toggleGroup('nav-workshops-group'); navigate('workshops')"><span data-i18n="nav_workshops">— LABORATORIES</span> <span class="nav-count" id="count-workshops"></span></span>
+        <span onclick="toggleGroup('nav-workshops-group')"><span data-i18n="nav_workshops">— LABORATORIES</span> <span class="nav-count" id="count-workshops"></span></span>
         <ul class="nav-children" id="children-nav-workshops-group">
           <!-- Los workshops se inyectan automáticamente desde main.js -->
         </ul>
@@ -111,6 +115,21 @@
       </li>
 
     </ul>
+
+    <!-- ── SOCIAL ── -----------------
+         ✏️ Solo Instagram por ahora, mismo lenguaje visual del
+         nav (misma tipografía/tamaño que las secciones). Actualiza
+         el href con el usuario real de Instagram cuando lo tengas. -->
+    <div class="nav-social">
+      <a href="https://instagram.com/" target="_blank" rel="noopener" class="nav-social-link">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+          <rect x="3" y="3" width="18" height="18" rx="5"/>
+          <circle cx="12" cy="12" r="4"/>
+          <circle cx="17.2" cy="6.8" r="1"/>
+        </svg>
+        <span>Instagram</span>
+      </a>
+    </div>
   </nav>
 
 
@@ -122,7 +141,7 @@
        el sitio, no cambia por página/proyecto). El generador de
        gradientes se dejó pendiente. -->
   <aside id="right-nav">
-    <span id="right-nav-label">Explorar</span>
+    <span id="right-nav-label">Explore</span>
   </aside>
 
   <!-- ── MOBILE OVERLAY ── -->
@@ -140,23 +159,29 @@
            dos columnas (#view-split se reutiliza tal cual, solo cambia
            lo que hay adentro — ver más abajo). -->
       <div class="view-switch" id="view-switch">
-        <button class="switch-btn" id="btn-grid" data-i18n="home_view_grid" onclick="setHomeView('grid')">Índice</button>
         <button class="switch-btn active" id="btn-bubbles" data-i18n="home_view_map" onclick="setHomeView('bubbles')">Exploration map</button>
+        <button class="switch-btn" id="btn-grid" data-i18n="home_view_grid" onclick="setHomeView('grid')">Index</button>
         <button class="switch-btn" id="btn-split" data-i18n="home_view_about" onclick="setHomeView('split')">About</button>
       </div>
 
-      <!-- ── Vista burbujas (principal) ──
-           ✏️ CAMBIO: los círculos de texto se reemplazaron por
-           composiciones imagen+número+gradiente por categoría
-           (#bubble-categories-overlay, generado en JS —
-           ver initBubbles() en main.js). El canvas se conserva
-           SOLO para la cuadrícula de fondo (_drawGrid()); ya no
-           dibuja los círculos ni maneja el hover/click (eso lo
-           hace el overlay HTML de arriba, con imágenes <img>
-           reales y mejor accesibilidad). -->
+      <!-- ── Exploration Map (vista principal) ──
+           ✏️ REDISEÑO: se reemplazó la grilla/círculos/imágenes
+           PNG por categoría por una única imagen de referencia
+           (cover.jpg) con un ícono minimal por cada entrada
+           navegable del sitio, superpuesto sobre la imagen — ver
+           _buildExplorationMap() en main.js. Cada ícono abre su
+           proyecto directo; en desktop el hover muestra un
+           tooltip con título/año/categoría/técnica, en touch el
+           primer tap revela el tooltip y un segundo tap lo abre. -->
       <div id="view-bubbles" class="home-view active">
-        <canvas id="bubble-canvas"></canvas>
-        <div id="bubble-categories-overlay" class="bubble-categories-overlay"></div>
+        <div class="map-stage" id="map-stage">
+          <img
+            class="map-cover-image"
+            src="https://raw.githubusercontent.com/expanded-interface/PRTFL_ASSETS/main/cover.jpg"
+            alt="Exploration map — reference image"
+            loading="eager">
+          <div class="map-icons-layer" id="map-icons-layer"></div>
+        </div>
       </div>
 
       <!-- ── Vista lista (antes "grid") ──
@@ -178,9 +203,9 @@
         <div class="split-text">
           <h2 data-i18n="about_title">Bio</h2>
           <p data-i18n="about_bio_p1">I'm Natalia Cabrera media artist, XR designer and filmmaker. My work brings together art, technology and ecology through XR experiences, interactive installations, artificial intelligence and textile art. I explore ways of relating between the human and the non-human by developing projects that combine immersive environments, sensory data, and physical materials. My work has been presented in contexts of art, science, and cinema, including Sundance Film Festival, Venice Biennale, CPH:DOX, Berlin Science Week, the Chilean Biennial of Media Arts, Festival de la Imagen, among others. I'm the co-founder and creative director of Nanai Studio, an interdisciplinary space focused on art, technology, and nature. I currently live between Barcelona, Santiago, and the internet.</p>
-          <p data-i18n="about_bio_p2">Ha participado en residencias artísticas en Latinoamérica y Europa.</p>
+          <p data-i18n="about_bio_p2">She has taken part in artist residencies across Latin America and Europe.</p>
           <blockquote data-i18n="about_quote">
-            Una forma de aprender desde cero a cuidar los propios sueños.
+            A way of learning, from scratch, to take care of one's own dreams.
           </blockquote>
         </div>
         <div class="split-image">
@@ -190,71 +215,9 @@
               <circle cx="8.5" cy="8.5" r="1.5"/>
               <path d="M21 15l-5-5L5 21"/>
             </svg>
-            <span data-i18n="portrait_label">retrato</span>
+            <span data-i18n="portrait_label">portrait</span>
           </div>
         </div>
-      </div>
-
-    </section>
-
-
-
-
-    <!-- ── PROJECTS ── ----------------------------------------------->
-    <!-- ✏️ Pantalla dividida según spec: izquierda = texto explicativo +
-         links a las 3 áreas de trabajo (funcionan como filtro sobre el
-         mismo grid de la derecha); derecha = grid con TODOS los
-         proyectos por defecto, sin filtro aplicado. Los links de área
-         llaman a filterCards(categoria) → applyFilter(categoria), el
-         mismo mecanismo que ya usaban los chips. -->
-    <section id="page-proyectos" class="page split-page">
-
-      <!-- Columna izquierda: texto + tabs por área de trabajo -->
-      <div class="split-text proyectos-intro">
-        <h2 data-i18n="proyectos_title">Proyectos</h2>
-        <p data-i18n="proyectos_intro_text">
-          Tres áreas de trabajo atraviesan mi práctica. Cada una agrupa
-          proyectos con una pregunta o método en común — selecciona una
-          para ver de qué se trata y filtrar la grilla.
-        </p>
-
-        <!-- ✏️ CAMBIO: las 3 categorías ahora funcionan como TABS
-             (role="tablist"/"tab"), no como botones de filtro sueltos:
-             seleccionar una cambia el texto introductorio de abajo
-             (#tab-intro) Y filtra la grilla, todo sin salir de la
-             sección Projects. data-filter coincide con el campo
-             `category` de cada proyecto en main.js. Se reutiliza la
-             clase .chip para heredar el estilo visual ya existente. -->
-        <div class="filter-chips proyectos-area-links" id="filter-chips" role="tablist" aria-label="Áreas de trabajo">
-          <button class="chip active" role="tab" aria-selected="true" data-filter="all" data-i18n="chip_all">Todos</button>
-          <button class="chip" role="tab" aria-selected="false" data-filter="invisible-technologies" data-i18n="chip_invisible_tech">Invisible Technologies</button>
-          <button class="chip" role="tab" aria-selected="false" data-filter="digital-ecologies" data-i18n="chip_digital_eco">Digital Ecologies</button>
-          <button class="chip" role="tab" aria-selected="false" data-filter="social-interfaces-laboratories" data-i18n="chip_social_labs">Social Interfaces</button>
-        </div>
-
-        <!-- Explicación conceptual de la tab activa. Contenido fijo
-             (no genérico) por categoría — ver TAB_INTROS en main.js.
-             role="tabpanel" porque describe el contenido del tab
-             seleccionado arriba. -->
-        <p class="tab-intro" id="tab-intro" role="tabpanel"></p>
-
-        <div class="search-bar">
-          <!-- Buscador combinado: año + día + palabra clave + tag,
-               ver _matchesAllTokens() en main.js -->
-          <input
-            type="text"
-            id="search-proyectos"
-            class="search-input"
-            data-i18n-placeholder="proyectos_search_placeholder"
-            placeholder="Buscar por palabra clave… (título, tag, año)"
-            autocomplete="off"
-          >
-        </div>
-      </div>
-
-      <!-- Columna derecha: grid con todos los proyectos (sin filtro por defecto) -->
-      <div class="proyectos-grid-col">
-        <div class="grid" id="grid-proyectos"></div>
       </div>
 
     </section>
@@ -267,46 +230,29 @@
          ────────────────────────────────────────────────
          Esta sección recibe el contenido mediante fetch
          desde main.js → openProject(). No editar.
-    ═══════════════════════════════════════════════════ -->
+
+         ✏️ Projects/Graphics/Texts/Laboratories son categorías
+         "padre" (ver Nav Bar): ya NO tienen una página propia de
+         aterrizaje — clic en el nav solo expande/colapsa sus
+         hijos (mismo comportamiento que Graphics siempre tuvo).
+         Cada hijo individual sigue abriendo su propio contenido
+         acá mismo (proyectos/graphics/workshops) o en pestaña
+         nueva (texts/research, ver `standalone` en main.js). -->
     <section id="page-proyecto" class="page project-page-inline">
       <!-- El contenido se inyecta dinámicamente -->
     </section>
 
-    <!-- ── TEXTS ── ----------------------------------------------->
-    <section id="page-texts" class="page">
-      <div class="content-block">
-        <h2 data-i18n="texts_title">Texts</h2>
-        <p data-i18n="texts_intro">Próximas exposiciones, residencias y eventos.</p>
-        <!-- ✏️ Antes esta lista estaba escrita a mano y duplicaba (con
-             riesgo de desincronizarse) los mismos 3 textos que ya viven
-             en el array `texts` de main.js y alimentan el nav lateral.
-             Ahora se genera desde ese mismo array — ver renderTextsList()
-             en main.js — así hay una sola fuente de verdad. -->
-        <ul id="texts-list" class="content-list"></ul>
-      </div>
-    </section>
-
-
-
      <!-- ── R E S E A R C H  ── ----------------------------------------------->
+     <!-- Research no agrupa hijos en el nav, así que conserva su
+          propia página (a diferencia de Projects/Texts/Workshops). -->
     <section id="page-research" class="page">
       <div class="content-block">
         <h2 data-i18n="research_title">Research</h2>
         <!-- Lista de research agrupada por año, cada ítem abre en pestaña
              nueva (ver renderResearchList() en main.js). Si el array
              `researchItems` está vacío, se muestra el mensaje de
-             "en construcción" en su lugar. -->
+             "under construction" en su lugar. -->
         <div id="research-list"></div>
-      </div>
-    </section>
-
-
-
-     <!-- ── WORKSHOPS ── ----------------------------------------------->
-    <section id="page-workshops" class="page">
-      <div class="content-block">
-        <h2 data-i18n="workshops_title">Workshops</h2>
-        <p data-i18n="under_construction">Under construction</p>
       </div>
     </section>
 
@@ -318,9 +264,9 @@
         <h2 data-i18n="about_title">Bio</h2>
         <p data-i18n="about_bio_p1">I'm Natalia Cabrera media artist, XR designer and filmmaker. My work brings together art, technology and ecology through XR experiences, interactive installations, artificial intelligence and textile art. I explore ways of relating between the human and the non-human by developing projects that combine immersive environments, sensory data, and physical materials. My work has been presented in contexts of art, science, and cinema, including Sundance Film Festival, Venice Biennale, CPH:DOX, Berlin Science Week, the Chilean Biennial of Media Arts, Festival de la Imagen, among others. I'm the co-founder and creative director of Nanai Studio, an interdisciplinary space focused on art, technology, and nature. I currently live between Barcelona, Santiago, and the internet.</p>
         <p data-i18n="about_cv_link">You can check my CV here</p>
-        <p data-i18n="about_bio_p2">Ha participado en residencias artísticas en Latinoamérica y Europa.</p>
+        <p data-i18n="about_bio_p2">She has taken part in artist residencies across Latin America and Europe.</p>
         <blockquote data-i18n="about_quote">
-          Una forma de aprender desde cero a cuidar los propios sueños.
+          A way of learning, from scratch, to take care of one's own dreams.
         </blockquote>
       </div>
       <div class="split-image">
@@ -330,7 +276,7 @@
             <circle cx="8.5" cy="8.5" r="1.5"/>
             <path d="M21 15l-5-5L5 21"/>
           </svg>
-          <span data-i18n="portrait_label">retrato</span>
+          <span data-i18n="portrait_label">portrait</span>
         </div>
       </div>
     </section>
@@ -338,24 +284,43 @@
   </main>
 
   <footer id="bottom-bar">
-    <div class="ticker-track">
-      <span class="muted">ᯤ</span>
-   
-      <span class="pill" style="background:#ffa8e9">'Everything is deeply interwingled'T.H.N.</span>
-      <span class="pill" style="background:#b1a5ff" data-i18n="footer_updated">Updated 07-28-26</span>
-      <span class="pill" style="background:#dcffa2" data-i18n="footer_location">Based in Los Lagos, CL</span>
-
+    <!-- ✏️ Ícono de Wi-Fi: se mantiene completamente estático (fuera
+         de .ticker-track, sin animación propia) mientras las pills
+         de alrededor se desplazan en loop — ver .wifi-icon / .ticker-*
+         en style.css. -->
+    <span class="wifi-icon" aria-hidden="true">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round">
+        <path d="M2 8.5a16 16 0 0 1 20 0"/>
+        <path d="M5.5 12.5a11 11 0 0 1 13 0"/>
+        <path d="M9 16.5a6 6 0 0 1 6 0"/>
+        <circle cx="12" cy="20" r="1" fill="currentColor" stroke="none"/>
+      </svg>
+    </span>
+    <div class="ticker-viewport">
+      <!-- El contenido se repite dos veces seguidas: es la técnica
+           estándar de marquee sin salto — la animación desplaza
+           exactamente el 50% del ancho total, así cuando la primera
+           copia termina de salir, la segunda ya está en su lugar y
+           el loop se ve continuo (ver @keyframes ticker en style.css). -->
+      <div class="ticker-track">
+        <span class="ticker-group">
+          <span class="pill" style="background:#dcdcdc">'Everything is deeply interwingled' — T.H.N.</span>
+          <span class="pill" style="background:#b1a5ff" data-i18n="footer_updated">Updated 07-28-26</span>
+          <span class="pill" style="background:#dcffa2" data-i18n="footer_location">Based in Los Lagos, CL</span>
+        </span>
+        <span class="ticker-group" aria-hidden="true">
+          <span class="pill" style="background:#ffa8e9">'Everything is deeply interwingled' — T.H.N.</span>
+          <span class="pill" style="background:#b1a5ff" data-i18n="footer_updated">Updated 07-28-26</span>
+          <span class="pill" style="background:#dcffa2" data-i18n="footer_location">Based in Los Lagos, CL</span>
+        </span>
+      </div>
     </div>
   </footer>
 
   <!-- i18n.js debe cargar ANTES que main.js: main.js usa t() al
-       construir el nav y las cards dinámicamente. -->
+       construir el nav y las listas dinámicamente. -->
   <script src="i18n.js"></script>
   <script src="main.js"></script>
-  <!-- contrast.js: detector automático de contraste (transversal
-       a todo el sitio). Debe cargar después de main.js porque
-       se apoya en las cards/nav/grid que main.js genera. -->
-  <script src="contrast.js"></script>
 
 
 </body>

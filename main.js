@@ -2,17 +2,17 @@
    PORTAFOLIO — main.js
    ────────────────────────────────────────────────────────
    ÍNDICE:
-   1. DATOS DE PROYECTOS     ← edita para agregar proyectos al grid
-   2. BURBUJAS DE INTERESES  ← edita para la vista del home
+   1. DATOS (Projects/Graphics/Workshops/Texts/Research) ← edita para agregar contenido
+   2. _allNavItems() / _openItem() — fuente única de entradas navegables
    3. MAPA DE PÁGINAS
    4. NAVEGACIÓN + TRANSICIONES
-   5. SLIDER DE IMÁGENES
-   6. GRUPOS COLAPSABLES
+   6. GRUPOS COLAPSABLES DEL NAV
    7. MENÚ MÓVIL
    8. RELOJ
-   9. GENERACIÓN DE TARJETAS (no editar)
-   10. CARGA DE PROYECTOS (no editar)
-   11. VISTA BURBUJAS — lógica de dibujo (no editar)
+   9. BUSCADOR + LISTAS DEL NAV (no editar)
+   10. CARGA DE PROYECTOS + NEXT/PREV (no editar)
+   11. EXPLORATION MAP (no editar)
+   HOME — VISTA "ÍNDICE"
 ════════════════════════════════════════════════════════ */
 
 
@@ -50,7 +50,7 @@ const projects = [
     year:     '2025',
     desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
     images:   ['Imagen/Radiofrecuencia/Radiofrecuencia_CSC_08.png'],
-    url: 'Proyectos/radio_frecuencia.html',
+    url: 'Proyectos/radiofrecuencia.html',
   },
 
   {
@@ -61,7 +61,7 @@ const projects = [
     year:     '2025 - ongoing',
     desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
     images:   [],
-    url: 'Proyectos/qvorvm_sensing.html',
+    url: 'Proyectos/QuorumSensing.html',
   },
 
   {
@@ -83,7 +83,7 @@ const projects = [
     year:     '2024',
     desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
     images:   [],
-    url: 'Proyectos/ecosistema_de_una_maquina.html',
+    url: 'Proyectos/ecosistemadeunamaquina.html',
   },
  
   {
@@ -164,7 +164,7 @@ const graphics = [
 const workshops = [
   {
     title:    'Todo está interconectado',
-    tag:      'taller',
+    tag:      'Workshop',
     color:    '#ffcefb',
     year:     '2025',
     desc:     'Descripción breve.',
@@ -190,6 +190,11 @@ const workshops = [
                 existe aún, deja '' y el click en el nav
                 simplemente abre la página Texts.
 ════════════════════════════════════════════════════════ */
+/* ✏️ `standalone: true` marca entradas que NO usan el layout
+   .project-split (son ensayos de una sola columna, ver
+   Texts/*.html) — se abren en una pestaña nueva en vez de
+   embeberse por fetch dentro del portafolio. Ver _openItem()
+   y buildNavList() en la sección de navegación. */
 const texts = [
   {
     title: 'Escuela de sensibilización tecnológica',
@@ -197,6 +202,7 @@ const texts = [
     color: '#ffdefd',
     year:  '2025',
     url:   'Texts/EST.html', // opcional
+    standalone: true,
   },
   {
     title: 'Encuentros sobre el fuego',
@@ -204,6 +210,7 @@ const texts = [
     color: '#ffdefd',
     year:  '2026',
     url:   'Texts/Fuego.html',
+    standalone: true,
   },
   {
     title: 'Laboratorios interespecies- cuerpos y ecologías',
@@ -211,6 +218,7 @@ const texts = [
     color: '#ffdefd',
     year:  '2026',
     url:   'Texts/Interespecie.html',
+    standalone: true,
   },
 
   /* ──────────────────────────────────────────────────
@@ -240,11 +248,12 @@ const texts = [
 ════════════════════════════════════════════════════════ */
 const researchItems = [
   {
-    title: '[Título de investigación de ejemplo]',
+    title: '[Example research title]',
     tag:   'Research',
     color: '#d8e8ff',
     year:  '2026',
     url:   'Research/investigacion_ejemplo.html',
+    standalone: true,
   },
 
   /* ──────────────────────────────────────────────────
@@ -259,28 +268,6 @@ const researchItems = [
      },
      ────────────────────────────────────────────────── */
 ];
-
-/* Genera la lista de la página Texts (ul#texts-list) a partir
-   del array `texts` — antes esta lista se quedaba vacía porque
-   la función no existía aún (el HTML y los comentarios en
-   index.html ya la referenciaban). */
-function renderTextsList() {
-  const ul = document.getElementById('texts-list');
-  if (!ul) return;
-  ul.innerHTML = '';
-  texts.forEach(item => {
-    const li = document.createElement('li');
-    const a = document.createElement('a');
-    a.href = item.url || '#';
-    a.target = '_blank';
-    a.rel = 'noopener';
-    a.style.color = 'inherit';
-    a.style.textDecoration = 'none';
-    a.textContent = item.title + (item.year ? ` — ${item.year}` : '');
-    li.appendChild(a);
-    ul.appendChild(li);
-  });
-}
 
 /* Genera la lista de Research agrupada por año (div#research-list),
    usando las clases .research-year-heading / .research-year-group
@@ -332,97 +319,62 @@ function renderResearchList() {
 
 
 /* ════════════════════════════════════════════════════════
-   2. EXPLORATION MAP — categorías del Nav Bar
+   2. FUENTE ÚNICA DE ENTRADAS NAVEGABLES
    ────────────────────────────────────────────────────────
-   Vista principal del home. Cada categoría principal del Nav
-   Bar se representa como: imagen → números de sus hijos →
-   gradiente (ver _buildExplorationOverlay() en la sección 11).
-   La correspondencia con el Nav Bar es 1 a 1: exactamente las
-   5 categorías principales (`pageMap`), ni una más ni una
-   menos, y los números debajo de cada imagen son exactamente
-   los hijos de esa categoría (los mismos arrays que alimentan
-   `buildNavProjects()`, `buildNavGraphics()`, etc.).
+   ✏️ Todo lo que se puede visitar en el sitio (Projects,
+   Graphics, Texts, Laboratories, Research) sale de esta única
+   función — la usan el Exploration Map del Home (sección 11),
+   la vista "Índice" (más abajo), el buscador del nav y la
+   navegación Next/Previous entre proyectos. Ni las burbujas ni
+   el índice duplican datos a mano: si agregas un ítem a
+   `projects`/`graphics`/`texts`/`workshops`/`researchItems`,
+   aparece automáticamente en los cuatro lugares.
 
-   CAMPOS de bubbleCategories:
-   · key      → debe coincidir con el catKey usado en los
-                grupos de _categoryChildren() más abajo
-   · word     → clave i18n del nombre de la categoría
-   · pageKey  → clave de pageMap; si es null (Graphics, sin
-                página propia todavía) la imagen/label no
-                se comporta como link, solo como etiqueta
-   · rx / ry  → posición (0–1) dentro del mapa en desktop
-   · hue      → tono base (0–360) del círculo de gradiente
-                de esa categoría, para poder distinguirlas
-   · img      → (opcional) ruta a una imagen PNG real. Si no
-                se define, se genera un placeholder con
-                textura orgánica (ver _categoryTexture() en
-                la sección 11) — basta con agregar `img` acá
-                para reemplazarlo por fotografía real.
-════════════════════════════════════════════════════════ */
-const bubbleCategories = [
-  {
-    key: 'proyectos', word: 'map_cat_projects', fallback: 'PROJECTS',
-    pageKey: 'proyectos',
-    rx: 0.16, ry: 0.32, r: 50,
-    img: 'Assets/01_home.png',
-  },
-  {
-    key: 'graphics', word: 'map_cat_graphics', fallback: 'GRAPHICS',
-    pageKey: null,
-    rx: 0.50, ry: 0.14,
-    img: 'Assets/04_home.png',
-  },
-  {
-    key: 'texts', word: 'map_cat_texts', fallback: 'TEXTS',
-    pageKey: 'texts',
-    rx: 0.84, ry: 0.26,
-    img: 'Assets/02_home.png',
-  },
-  {
-    key: 'workshops', word: 'map_cat_workshops', fallback: 'LABORATORIES',
-    pageKey: 'workshops',
-    rx: 0.37, ry: 0.72,
-    img: 'Assets/03_home.png',
-  },
-  {
-    key: 'research', word: 'map_cat_research', fallback: 'RESEARCH',
-    pageKey: 'research', hue: 255,
-    rx: 0.72, ry: 0.74,
-    img: 'Imagen/exploration/research.png',
-  },
-];
+   `standalone: true` (heredado del objeto original vía spread)
+   marca entradas que NO usan el layout .project-split (los
+   ensayos de Texts/Research) — ver _openItem() más abajo. */
+function _allNavItems() {
+  return [
+    ...projects.map(p => ({ ...p, categoryLabel: t('nav_projects'), tema: p.tag || '—' })),
+    ...graphics.map(g => ({ ...g, categoryLabel: t('nav_graphics'), tema: g.tag || '—' })),
+    ...texts.map(x => ({ ...x, categoryLabel: t('nav_texts'), tema: x.tag || '—' })),
+    ...workshops.map(w => ({ ...w, categoryLabel: t('nav_workshops'), tema: w.tag || '—' })),
+    ...researchItems.map(r => ({ ...r, categoryLabel: t('nav_research'), tema: r.tag || '—' })),
+  ];
+}
 
-/* Devuelve, para una categoría, la lista de hijos que SÍ tienen
-   página propia (mismos arrays que usa el Nav Bar) — cada uno
-   se numera 01, 02, 03… debajo de la imagen de su categoría.
-   Una sola fuente de verdad: no se duplica nada a mano. */
-function _categoryChildren(catKey) {
-  const map = {
-    proyectos: projects,
-    graphics:  graphics,
-    texts:     texts,
-    workshops: workshops,
-    research:  researchItems,
-  };
-  return (map[catKey] || []).filter(item => item.url);
+/* Abre una entrada respetando su tipo de página: los ensayos
+   standalone (Texts/Research) se abren en pestaña nueva; todo
+   lo demás (Projects/Graphics/Laboratories) se embebe con
+   openProject() como siempre. Punto único usado por el mapa de
+   exploración, el índice editorial y el buscador del nav, así
+   ninguno de los tres intenta embeber por fetch una página que
+   no tiene .project-split. */
+function _openItem(item) {
+  if (!item || !item.url) return;
+  if (item.standalone) {
+    window.open(item.url, '_blank', 'noopener');
+  } else {
+    openProject(item.url, item.title, item.categoryLabel || item.category || '');
+  }
 }
 
 /* ════════════════════════════════════════════════════════
    3. MAPA DE PÁGINAS
    ────────────────────────────────────────────────────────
-   ✏️  Si agregas una sección nueva:
+   ✏️ Projects / Graphics / Texts / Laboratories son categorías
+   "padre": solo agrupan hijos en el acordeón del nav (ver
+   toggleGroup()) y NO tienen página propia — por eso no
+   aparecen acá. Si agregas una sección nueva CON página propia
+   (como Research o About):
    1. Crea <section id="page-NUEVA" class="page"> en index.html
    2. Agrega <li> en el nav con onclick="navigate('nueva')"
    3. Añade aquí: nueva: 'page-nueva',
 ════════════════════════════════════════════════════════ */
 const pageMap = {
-  home:      'page-home',
-  about:     'page-about',
-  texts:     'page-texts',
-  graphics:  'page-graphics',
-  workshops: 'page-workshops',
-  research:  'page-research',
-  proyectos: 'page-proyectos',
+  home:     'page-home',
+  about:    'page-about',
+  research: 'page-research',
   proyecto: 'page-proyecto',
 };
 
@@ -473,43 +425,6 @@ function navigate(key) {
   if (main) main.scrollTop = 0;
 
   closeMobileNav();
-}
-
-
-/* ════════════════════════════════════════════════════════
-   5. SLIDER DE IMÁGENES EN CARDS
-════════════════════════════════════════════════════════ */
-function initSlider(card, images) {
-  const track   = card.querySelector('.slider-track');
-  const dotsEl  = card.querySelector('.slider-dots');
-  const btnPrev = card.querySelector('.slider-prev');
-  const btnNext = card.querySelector('.slider-next');
-  let current   = 0;
-
-  function goTo(index) {
-    current = ((index % images.length) + images.length) % images.length;
-    track.style.transform = `translateX(-${current * 100}%)`;
-    dotsEl.querySelectorAll('.dot').forEach((d, i) =>
-      d.classList.toggle('active', i === current)
-    );
-  }
-
-  if (btnPrev) btnPrev.addEventListener('click', e => { e.stopPropagation(); goTo(current - 1); });
-  if (btnNext) btnNext.addEventListener('click', e => { e.stopPropagation(); goTo(current + 1); });
-
-  images.forEach((_, i) => {
-    const dot = document.createElement('span');
-    dot.className = 'dot' + (i === 0 ? ' active' : '');
-    dot.addEventListener('click', e => { e.stopPropagation(); goTo(i); });
-    dotsEl.appendChild(dot);
-  });
-
-  let startX = 0;
-  track.addEventListener('touchstart', e => { startX = e.touches[0].clientX; }, { passive: true });
-  track.addEventListener('touchend',   e => {
-    const diff = startX - e.changedTouches[0].clientX;
-    if (Math.abs(diff) > 40) goTo(current + (diff > 0 ? 1 : -1));
-  });
 }
 
 
@@ -569,12 +484,12 @@ setInterval(updateClock, 10000);
 
 
 /* ════════════════════════════════════════════════════════
-   9. GENERACIÓN DE TARJETAS
+   9. BUSCADOR + LISTAS DEL NAV
    No editar.
 ════════════════════════════════════════════════════════ */
 /* Quita tildes/diacríticos para que la búsqueda no distinga
-   "fotografia" de "fotografía". Se usa tanto al construir las
-   cards como al leer lo que la persona escribe en el buscador. */
+   "fotografia" de "fotografía". Se usa tanto en el buscador del
+   nav como en el mapa de exploración. */
 function _normalizeText(str) {
   return (str || '')
     .toString()
@@ -583,176 +498,26 @@ function _normalizeText(str) {
     .replace(/[\u0300-\u036f]/g, '');
 }
 
-function makeCard(p) {
-  const card = document.createElement('article');
-  card.className = 'card';
-  card.dataset.category = p.category;
-
-  const searchableBits = [
-    p.title,
-    p.desc,
-    p.year,
-    p.category,
-    p.tag,
-    ...(p.tags || []).map(t => t.label),
-  ];
-  card.dataset.search = _normalizeText(searchableBits.filter(Boolean).join(' '));
-
-  if (p.url) {
-    card.onclick = () => openProject(p.url, p.title, p.category);
-    card.style.cursor = 'pointer';
-  } else {
-    card.onclick = () => filterCards(p.category);
-    card.style.cursor = 'pointer';
-  }
-
-  const hasImages = Array.isArray(p.images) && p.images.length > 0;
-  const hasSlider = hasImages && p.images.length > 1;
-
-  let thumbHTML = '';
-  if (hasImages) {
-    const slides = p.images.map(src =>
-      `<div class="slide"><img src="${src}" alt="${p.title}" loading="lazy"></div>`
-    ).join('');
-    const controls = hasSlider
-      ? `<button class="slider-prev" aria-label="Anterior">‹</button>
-         <button class="slider-next" aria-label="Siguiente">›</button>`
-      : '';
-    thumbHTML = `
-      <div class="card-slider">
-        <div class="slider-track">${slides}</div>
-        ${controls}
-        <div class="slider-dots"></div>
-      </div>`;
-  } else {
-    thumbHTML = `
-      <div class="card-thumb">
-        <svg width="28" height="28" fill="none" stroke="currentColor" stroke-width="1.2" viewBox="0 0 24 24">
-          <rect x="3" y="3" width="18" height="18" rx="2"/>
-          <circle cx="8.5" cy="8.5" r="1.5"/>
-          <path d="M21 15l-5-5L5 21"/>
-        </svg>
-        <span>${t('card_no_image')}</span>
-      </div>`;
-  }
-
-  const tagsHTML = (p.tags || [])
-    .map(tg => `<span class="pill" style="background:${tg.color}">${tg.label}</span>`)
-    .join('');
-
-  card.innerHTML = `
-    ${thumbHTML}
-    <div class="card-body">
-      <div class="tag-row">${tagsHTML}</div>
-      <h3>${p.title}</h3>
-      <p>${p.desc}</p>
-      ${p.url ? `<span class="card-link-hint">${t('card_view_project')}</span>` : ''}
-      <span class="card-year">${p.year}</span>
-    </div>
-  `;
-
-  if (hasSlider) initSlider(card, p.images);
-  return card;
-}
-
-function filterCards(category) {
-  const pageEl = document.getElementById('page-proyectos');
-  if (pageEl && !pageEl.classList.contains('active')) {
-    navigate('proyectos');
-    setTimeout(() => applyFilter(category), 380);
-  } else {
-    applyFilter(category);
-  }
-}
-
-/* Estado actual del filtro por categoría y del buscador.
-   _renderProyectosGrid() aplica ambos a la vez sobre las cards. */
-let _activeCategory = 'all';
-let _searchQuery     = '';
-
-/* ════════════════════════════════════════════════════════
-   TABS DE PROJECTS — explicación conceptual por área
-   ────────────────────────────────────────────────────────
-   Texto específico por categoría (no genérico): ayuda a
-   entender qué distingue a cada una dentro de la práctica,
-   no solo repite el nombre del filtro. Se muestra en
-   #tab-intro cada vez que se selecciona una tab (ver
-   applyFilter() más abajo).
-════════════════════════════════════════════════════════ */
-const TAB_INTROS = {
-  all: 'Tres áreas de trabajo atraviesan mi práctica. Cada una agrupa proyectos con una pregunta o método en común — selecciona una para ver de qué se trata y filtrar la grilla.',
-  'invisible-technologies': 'Proyectos sobre lo que opera sin verse: señales, datos, infraestructuras y sistemas de sensado o inteligencia artificial que median la experiencia por debajo de la percepción cotidiana. La pregunta común: cómo se hace visible —o se deja sentir— una tecnología que normalmente no se nota.',
-  'digital-ecologies': 'Proyectos que cruzan ecología y medios digitales: simulaciones, paisajes sonoros y formas de vida sintética. Tratan lo digital como un ecosistema más, con sus propios ciclos, dependencias y relaciones con el entorno físico que representa o extiende.',
-  'social-interfaces-laboratories': 'Práctica relacional y situada: trabajo de campo, intervención en espacio público y colaboración comunitaria. Aquí la tecnología —o el dispositivo, o el material— funciona como interfaz entre personas, territorio y memoria compartida.',
-};
-
-function applyFilter(category) {
-  _activeCategory = category;
-  document.querySelectorAll('.chip').forEach(btn => {
-    const isActive = btn.dataset.filter === category;
-    btn.classList.toggle('active', isActive);
-    /* role="tab": refleja el estado seleccionado para lectores
-       de pantalla, no solo visualmente. */
-    if (btn.getAttribute('role') === 'tab') btn.setAttribute('aria-selected', String(isActive));
-  });
-
-  const intro = document.getElementById('tab-intro');
-  if (intro) intro.textContent = TAB_INTROS[category] || TAB_INTROS.all;
-
-  _renderProyectosGrid();
-}
-
-function _renderProyectosGrid() {
-  const cards = document.querySelectorAll('#grid-proyectos .card');
-  cards.forEach(c => {
-    const matchesCategory = _activeCategory === 'all' || c.dataset.category === _activeCategory;
-    const matchesSearch   = !_searchQuery || (c.dataset.search || '').includes(_searchQuery);
-    c.style.display = (matchesCategory && matchesSearch) ? '' : 'none';
-  });
-}
-
-/* ════════════════════════════════════════════════════════
-   BUSCADOR POR PALABRA CLAVE (página Proyectos)
-   ────────────────────────────────────────────────────────
-   Filtra sobre lo ya generado en #grid-proyectos buscando en
-   título, tags, descripción, año y categoría (sin tildes).
-   Se combina con el chip de categoría activo.
-════════════════════════════════════════════════════════ */
-function initSearch() {
-  const input = document.getElementById('search-proyectos');
-  if (!input) return;
-  input.addEventListener('input', () => {
-    _searchQuery = _normalizeText(input.value.trim());
-    _renderProyectosGrid();
-  });
-}
-
-initNavSearch();   // ← agrega esta línea
-
 /* ════════════════════════════════════════════════════════
    BUSCADOR POR PALABRA CLAVE (NAV BAR)
    ────────────────────────────────────────────────────────
+   Combina año + palabra clave + tag en una sola caja, sobre
+   TODAS las entradas navegables (_allNavItems(): Projects,
+   Graphics, Texts, Laboratories, Research) — una sola fuente
+   de verdad, sin arreglos duplicados a mano.
 ════════════════════════════════════════════════════════ */
-
 function initNavSearch() {
   const input   = document.getElementById('nav-search-input');
   const results = document.getElementById('nav-search-results');
   if (!input || !results) return;
-
-  // Junta todo lo que tiene título + url en un solo arreglo
-  const allItems = [
-    ...projects.map(p => ({ title: p.title, url: p.url, category: p.category })),
-    ...texts.map(t => ({ title: t.title, url: t.url, category: '' })),
-    ...workshops.map(w => ({ title: w.title, url: w.url, category: '' })),
-  ];
 
   input.addEventListener('input', () => {
     const q = _normalizeText(input.value.trim());
     results.innerHTML = '';
     if (!q) { results.classList.remove('open'); return; }
 
-    const matches = allItems.filter(item =>
-      item.url && _normalizeText(item.title).includes(q)
+    const matches = _allNavItems().filter(item =>
+      item.url && _normalizeText([item.title, item.year, item.tema].filter(Boolean).join(' ')).includes(q)
     );
 
     matches.forEach(item => {
@@ -760,7 +525,7 @@ function initNavSearch() {
       li.className = 'nav-search-item';
       li.textContent = item.title;
       li.onclick = () => {
-        openProject(item.url, item.title, item.category);
+        _openItem(item);
         input.value = '';
         results.innerHTML = '';
         results.classList.remove('open');
@@ -771,21 +536,21 @@ function initNavSearch() {
     results.classList.toggle('open', matches.length > 0);
   });
 }
+initNavSearch();
 
 /* ════════════════════════════════════════════════════════
    9.1 CONSTRUCCIÓN GENÉRICA DE LISTAS DEL NAV
    ────────────────────────────────────────────────────────
-   Construye los <li> hijos de un grupo del nav (Proyectos,
-   Textos o Workshops) a partir de un array de datos, y
-   actualiza el contador "(n)" del grupo correspondiente.
+   Construye los <li> hijos de un grupo del nav (Projects,
+   Graphics, Texts o Laboratories) a partir de un array de
+   datos, y actualiza el contador "(n)" del grupo.
 
-   · Si el item tiene `year`, se muestra "Título — Año".
-   · Si el item tiene `url`, el click abre esa página con
-     openProject() (igual que un proyecto).
-   · Si no tiene `url` pero sí `category`, el click filtra
-     el grid de proyectos por esa categoría.
-   · Si no tiene ninguna de las dos, el click navega a
-     `fallbackPage` (ej: 'texts', 'workshops').
+   · Si el item tiene `standalone: true` (ensayos de Texts/
+     Research), el link es un <a> real con target="_blank":
+     abre en pestaña nueva, sin pasar por openProject() (esas
+     páginas no tienen .project-split para embeber).
+   · Si no, el click abre la página con openProject() (mismo
+     mecanismo que un proyecto normal).
 ════════════════════════════════════════════════════════ */
 /* Calcula si conviene texto oscuro o claro sobre un color de
    fondo, para que las pills de año/técnica en el nav siempre
@@ -802,7 +567,7 @@ function _contrastText(hex) {
   return luminance > 0.6 ? '#222' : '#fff';
 }
 
-function buildNavList(ulSelector, items, fallbackPage, countId) {
+function buildNavList(ulSelector, items, countId) {
   const ul = document.querySelector(ulSelector);
   if (ul) {
     ul.innerHTML = '';
@@ -811,7 +576,6 @@ function buildNavList(ulSelector, items, fallbackPage, countId) {
       li.className = 'nav-branch' + (i === items.length - 1 ? ' last' : '');
 
       const a = document.createElement('a');
-      a.href = '#';
       a.dataset.url = item.url || '';
 
       /* Título en su propia línea */
@@ -846,12 +610,16 @@ function buildNavList(ulSelector, items, fallbackPage, countId) {
         a.appendChild(tagsRow);
       }
 
-      if (item.url) {
+      if (item.url && item.standalone) {
+        a.href = item.url;
+        a.target = '_blank';
+        a.rel = 'noopener';
+      } else if (item.url) {
+        a.href = '#';
         a.onclick = (e) => { e.preventDefault(); openProject(item.url, item.title, item.category || ''); };
-      } else if (item.category) {
-        a.onclick = (e) => { e.preventDefault(); filterCards(item.category); };
       } else {
-        a.onclick = (e) => { e.preventDefault(); navigate(fallbackPage); };
+        a.href = '#';
+        a.setAttribute('aria-disabled', 'true');
       }
       li.appendChild(a);
       ul.appendChild(li);
@@ -864,66 +632,27 @@ function buildNavList(ulSelector, items, fallbackPage, countId) {
   }
 }
 
-function buildNavProjects()  { buildNavList('#children-nav-proyectos-group', projects,  'proyectos', 'count-proyectos'); }
-function buildNavGraphics()  { buildNavList('#children-nav-graphics-group',     graphics,     'graphics',     'count-graphics'); }
-function buildNavTexts()     { buildNavList('#children-nav-texts-group',     texts,     'texts',     'count-texts'); }
-function buildNavWorkshops() { buildNavList('#children-nav-workshops-group', workshops, 'workshops', 'count-workshops'); }
+function buildNavProjects()  { buildNavList('#children-nav-proyectos-group', projects,  'count-proyectos'); }
+function buildNavGraphics()  { buildNavList('#children-nav-graphics-group',  graphics,   'count-graphics'); }
+function buildNavTexts()     { buildNavList('#children-nav-texts-group',    texts,      'count-texts'); }
+function buildNavWorkshops() { buildNavList('#children-nav-workshops-group', workshops, 'count-workshops'); }
 
-function populateGrids() {
-  /* Mostramos lo más reciente primero. Como cada proyecto/
-     workshop nuevo se pega al FINAL del array (ver comentarios
-     en la sección 1), invertimos el orden solo para mostrarlo:
-     el nav y demás listas siguen el orden del array tal cual. */
-  const projectsByRecent  = [...projects].reverse();
-  const workshopsByRecent = [...workshops].reverse();
-
-  const grid = document.getElementById('grid-proyectos');
-  if (grid) projectsByRecent.forEach(p => grid.appendChild(makeCard(p)));
-
-  const gridWorkshops = document.getElementById('grid-workshops');
-  if (gridWorkshops) workshopsByRecent.forEach(p => gridWorkshops.appendChild(makeCard(p)));
-}
-
-
-
-function initFilterChips() {
-  document.querySelectorAll('.chip').forEach(btn => {
-    btn.addEventListener('click', () => applyFilter(btn.dataset.filter));
-  });
-}
-
-populateGrids();
 buildNavProjects();
 buildNavGraphics();
 buildNavTexts();
 buildNavWorkshops();
-initFilterChips();
-/* Texto introductorio inicial de la tab "Todos" (ver TAB_INTROS) */
-{
-  const introEl = document.getElementById('tab-intro');
-  if (introEl) introEl.textContent = TAB_INTROS.all;
-}
-initSearch();
-renderTextsList();
 renderResearchList();
 
 /* Aplica los textos fijos (data-i18n) a todo lo que main.js
-   acaba de generar (cards, nav, listas). `applyI18n` vive en
-   i18n.js, que se carga antes que este archivo. Ya no hay
-   selector de idioma, así que esto corre una sola vez. */
+   acaba de generar (nav, listas). `applyI18n` vive en i18n.js,
+   que se carga antes que este archivo. */
 if (typeof applyI18n === 'function') applyI18n(document);
 if (typeof applyContrastAuto === 'function') applyContrastAuto(document);
 
 document.addEventListener('DOMContentLoaded', () => {
   const params = new URLSearchParams(window.location.search);
-  const filter = params.get('filter');
-  const page   = params.get('page');
-  if (filter) {
-    navigate('proyectos');
-    setTimeout(() => applyFilter(filter), 50);
-  } else if (page && pageMap[page]) {
-    navigate(page);
-  }
+  const page = params.get('page');
+  if (page && pageMap[page]) navigate(page);
 });
 
 
@@ -1007,7 +736,7 @@ async function openProject(url, title, category) {
 
   try {
     const res  = await fetch(url);
-    if (!res.ok) throw new Error('No se pudo cargar el proyecto');
+    if (!res.ok) throw new Error('Could not load the project');
     const html = await res.text();
 
     const parser = new DOMParser();
@@ -1015,7 +744,7 @@ async function openProject(url, title, category) {
     const frag   = doc.querySelector('.project-split');
 
     if (!frag) {
-      container.innerHTML = `<div class="content-block"><p>No se encontró contenido del proyecto.</p></div>`;
+      container.innerHTML = `<div class="content-block"><p>Project content not found.</p></div>`;
       return;
     }
 
@@ -1024,22 +753,16 @@ async function openProject(url, title, category) {
       if (href && href.includes('index.html')) {
         a.href = '#';
         const target = new URL(href, window.location.href);
-        const pageParam   = target.searchParams.get('page');
-        const filterParam = target.searchParams.get('filter');
+        const pageParam = target.searchParams.get('page');
         a.onclick = (e) => {
           e.preventDefault();
-          if (pageParam && pageMap[pageParam]) navigate(pageParam);
-          else if (filterParam) { navigate('proyectos'); setTimeout(() => applyFilter(filterParam), 380); }
-          else navigate('proyectos');
+          navigate(pageParam && pageMap[pageParam] ? pageParam : 'home');
         };
       } else if (href && href.endsWith('.html') && !href.startsWith('http')) {
-        const matchedProject = projects.find(p => p.url && p.url.includes(href.split('/').pop()));
-        if (matchedProject) {
+        const matched = _allNavItems().find(it => it.url && it.url.includes(href.split('/').pop()));
+        if (matched) {
           a.href = '#';
-          a.onclick = (e) => {
-            e.preventDefault();
-            openProject(matchedProject.url, matchedProject.title, matchedProject.category);
-          };
+          a.onclick = (e) => { e.preventDefault(); _openItem(matched); };
         }
       }
     });
@@ -1058,21 +781,72 @@ async function openProject(url, title, category) {
        (ej: ThoughtForms.html). No hace nada si no existe. */
     _initTFGrid(container);
 
+    /* Navegación persistente Next/Previous entre proyectos —
+       ver _buildProjectNav() más abajo. */
+    _buildProjectNav(container, url);
+
     /* ✏️ El fragmento recién inyectado puede traer sus propios
-       data-i18n (o bloques .i18n-es/.i18n-en) y colores dinámicos
-       que necesitan el chequeo de contraste — se aplican acá para
-       que el traductor y el detector de contraste cubran también
-       las páginas de proyecto cargadas por fetch. */
+       data-i18n y colores dinámicos que necesitan el chequeo de
+       contraste — se aplican acá para que el traductor y el
+       detector de contraste cubran también las páginas de
+       proyecto cargadas por fetch. */
     if (typeof applyI18n === 'function') applyI18n(container);
     if (typeof applyContrastAuto === 'function') applyContrastAuto(container);
 
   } catch (err) {
     container.innerHTML = `
       <div class="content-block">
-        <p style="color:#e87c5a">Error al cargar el proyecto.</p>
+        <p style="color:#e87c5a">Error loading the project.</p>
         <p class="muted">${err.message}</p>
       </div>`;
   }
+}
+
+/* ════════════════════════════════════════════════════════
+   10.0 NEXT / PREVIOUS ENTRE PROYECTOS
+   ────────────────────────────────────────────────────────
+   ✏️ Navegación persistente entre entradas del portafolio:
+   permite moverse de un proyecto a otro sin volver al menú.
+   Solo incluye entradas que usan el layout .project-split
+   (Projects, Graphics, Laboratories) — los ensayos standalone
+   de Texts/Research no tienen ese layout y abren aparte (ver
+   `standalone` en _allNavItems()). El orden es continuo y
+   circular: desde el último ítem, "Next" vuelve al primero.
+════════════════════════════════════════════════════════ */
+function _browsableSplitItems() {
+  return _allNavItems().filter(it => it.url && !it.standalone);
+}
+
+function _buildProjectNav(container, currentUrl) {
+  /* Quita cualquier barra de navegación previa (evita duplicados
+     al abrir varios proyectos seguidos dentro del mismo contenedor). */
+  container.querySelectorAll(':scope > .project-nav').forEach(el => el.remove());
+
+  const list = _browsableSplitItems();
+  const idx  = list.findIndex(it => it.url === currentUrl);
+  if (idx === -1 || list.length < 2) return;
+
+  const prev = list[(idx - 1 + list.length) % list.length];
+  const next = list[(idx + 1) % list.length];
+
+  const nav = document.createElement('nav');
+  nav.className = 'project-nav';
+  nav.setAttribute('aria-label', 'Project navigation');
+
+  const prevLink = document.createElement('a');
+  prevLink.href = '#';
+  prevLink.className = 'project-nav-prev';
+  prevLink.innerHTML = `<span class="nav-hint">← Previous</span><span>${prev.title}</span>`;
+  prevLink.onclick = (e) => { e.preventDefault(); _openItem(prev); };
+
+  const nextLink = document.createElement('a');
+  nextLink.href = '#';
+  nextLink.className = 'project-nav-next';
+  nextLink.innerHTML = `<span class="nav-hint">Next →</span><span>${next.title}</span>`;
+  nextLink.onclick = (e) => { e.preventDefault(); _openItem(next); };
+
+  nav.append(prevLink, nextLink);
+  container.appendChild(nav);
 }
 
 /* ════════════════════════════════════════════════════════
@@ -1214,282 +988,126 @@ function _highlightActiveProject() {
 
 
 /* ════════════════════════════════════════════════════════
-   11. EXPLORATION MAP — construcción del overlay
+   11. EXPLORATION MAP
    ────────────────────────────────────────────────────────
-   La cuadrícula de fondo se sigue dibujando en <canvas> tal
-   como antes (_drawGrid, sin cambios). Las categorías ya NO
-   se dibujan en el canvas: ahora son elementos HTML reales
-   (imagen + label + números + gradiente) en
-   #bubble-categories-overlay, construidos por
-   _buildExplorationOverlay() — esto permite usar <img>
-   verdaderas, mejor accesibilidad (son <a>/<button> reales)
-   y que los números de hijos sean clicables uno por uno.
+   ✏️ REDISEÑO: la grilla/círculos/imágenes PNG por categoría
+   se reemplazaron por una única imagen de referencia (cover.jpg)
+   con un ícono minimal por CADA entrada navegable del sitio
+   (_allNavItems(): Projects, Graphics, Texts, Laboratories,
+   Research), distribuidos en un anillo sobre la imagen —misma
+   idea espacial de "mapa" que antes, pero ahora apuntando
+   directo a cada pieza en vez de a categorías intermedias.
+
+   · Cada ícono es un <button> real: accesible por teclado,
+     con aria-label, y clicable/Enter para abrir el proyecto.
+   · Desktop (hover real): pasar el mouse muestra un tooltip
+     con título / año / categoría / técnica y agranda el ícono
+     levemente. Clic abre el proyecto directo.
+   · Touch (sin hover): el primer tap solo revela el tooltip
+     (agrega .is-open); un segundo tap sobre el mismo ícono
+     recién abre el proyecto — evita activaciones accidentales
+     al recorrer el mapa con el dedo. Tocar fuera cierra el
+     tooltip abierto.
+   · Las posiciones son puramente porcentuales (sin canvas ni
+     redibujado en resize): responden solas al tamaño del
+     contenedor, tanto en desktop como en mobile.
 ════════════════════════════════════════════════════════ */
-let _bubblesReady = false;
-let _currentView  = 'bubbles';
+let _mapReady    = false;
+let _currentView = 'bubbles';
 
-/* Dibuja la cuadrícula de fondo (líneas finas sobre blanco).
-   No editar — se mantiene igual que antes del rediseño. */
-function _drawGrid(ctx, W, H) {
-  const spacing = 24;
-  ctx.save();
-  ctx.fillStyle = '#ffffff';
-  ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = 'rgba(0, 0, 0, 0.07)';
-  ctx.lineWidth = 0.8;
-
-  for (let x = 0; x <= W; x += spacing) {
-    ctx.beginPath();
-    ctx.moveTo(x + 0.5, 0);
-    ctx.lineTo(x + 0.5, H);
-    ctx.stroke();
-  }
-  for (let y = 0; y <= H; y += spacing) {
-    ctx.beginPath();
-    ctx.moveTo(0, y + 0.5);
-    ctx.lineTo(W, y + 0.5);
-    ctx.stroke();
-  }
-  ctx.restore();
+/* true en dispositivos sin hover real (touch) — decide si el
+   primer tap sobre un ícono revela el tooltip en vez de abrir
+   el proyecto directamente. */
+function _isTouchDevice() {
+  return !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 }
 
-/* ── Placeholder de imagen por categoría ──
-   Genera una textura orgánica (blotches irregulares, look de
-   "muestra de material") en un canvas offscreen y la devuelve
-   como data URL PNG — así cada categoría tiene una <img> PNG
-   real aunque todavía no haya fotografía propia. Determinístico
-   por `seed` (el hue de la categoría) para que no cambie entre
-   renders. ✏️ Para usar una foto real, basta con agregar el
-   campo `img: 'ruta/a/imagen.png'` al objeto de la categoría en
-   bubbleCategories (sección 2) — si existe, se usa esa en vez
-   de generar el placeholder. */
-function _categoryTexture(hue, size = 320) {
-  const canvas = document.createElement('canvas');
-  canvas.width = size; canvas.height = size;
-  const ctx = canvas.getContext('2d');
+function _buildExplorationMap() {
+  const layer = document.getElementById('map-icons-layer');
+  if (!layer) return;
+  layer.innerHTML = '';
 
-  ctx.fillStyle = `hsl(${hue}, 18%, 93%)`;
-  ctx.fillRect(0, 0, size, size);
+  const items = _allNavItems().filter(it => it.url);
+  const n = items.length;
+  if (!n) return;
 
-  /* PRNG determinístico simple (mismo hue → mismo resultado) */
-  let seed = hue * 9301 + 49297;
-  const rand = () => {
-    seed = (seed * 9301 + 49297) % 233280;
-    return seed / 233280;
-  };
+  items.forEach((item, i) => {
+    /* Distribución en anillo: ángulo uniforme por ítem, radio
+       elíptico como fracción del contenedor (responde solo al
+       tamaño real gracias a que todo está en %). Clamps evitan
+       que un ícono quede pegado al borde o tapado por el chrome
+       del switch de vistas (arriba a la derecha). */
+    const angle = (2 * Math.PI * i / n) - Math.PI / 2;
+    let x = 0.5 + 0.40 * Math.cos(angle);
+    let y = 0.53 + 0.36 * Math.sin(angle);
+    x = Math.min(0.92, Math.max(0.08, x));
+    y = Math.min(0.88, Math.max(0.16, y));
 
-  const blotches = 9;
-  for (let i = 0; i < blotches; i++) {
-    const cx = rand() * size, cy = rand() * size;
-    const r  = size * (0.10 + rand() * 0.22);
-    const l  = 30 + rand() * 45;
-    const s  = 12 + rand() * 30;
-    ctx.beginPath();
-    ctx.fillStyle = `hsla(${(hue + i * 17) % 360}, ${s}%, ${l}%, ${0.5 + rand() * 0.4})`;
-    ctx.moveTo(cx + r, cy);
-    const points = 7;
-    for (let p = 1; p <= points; p++) {
-      const ang = (p / points) * Math.PI * 2;
-      const rr  = r * (0.7 + rand() * 0.5);
-      ctx.lineTo(cx + Math.cos(ang) * rr, cy + Math.sin(ang) * rr);
-    }
-    ctx.closePath();
-    ctx.fill();
-  }
-  return canvas.toDataURL('image/png');
-}
+    const btn = document.createElement('button');
+    btn.type = 'button';
+    btn.className = 'map-icon';
+    btn.style.left = (x * 100) + '%';
+    btn.style.top  = (y * 100) + '%';
+    btn.setAttribute('aria-label', item.title);
 
-/* Construye el overlay HTML del Exploration Map: por cada
-   categoría del Nav Bar → gradiente (detrás) + imagen + label,
-   números de hijos y líneas que conectan las categorías entre
-   sí. Reemplaza por completo el contenido anterior en cada
-   llamada (recreado en cada resize). */
-function _buildExplorationOverlay(isMobile) {
-  const overlay = document.getElementById('bubble-categories-overlay');
-  if (!overlay) return;
-  overlay.innerHTML = '';
-  overlay.classList.toggle('is-mobile', isMobile);
+    /* Clases de "flip" para que el tooltip nunca se corte contra
+       el borde del contenedor: se abre hacia el lado con más
+       espacio libre según en qué cuadrante cae el ícono. */
+    btn.classList.add(y < 0.42 ? 'tip-below' : 'tip-above');
+    btn.classList.add(x < 0.28 ? 'tip-right' : x > 0.72 ? 'tip-left' : 'tip-center');
 
-  /* Líneas que interconectan las categorías entre sí (solo en
-     desktop, donde las posiciones son absolutas rx/ry). Van en
-     un <svg> propio, debajo de los bloques, para que no tapen
-     ni imágenes ni texto. */
-  let svg = null;
-  if (!isMobile) {
-    svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-    svg.setAttribute('class', 'category-connections');
-    svg.setAttribute('preserveAspectRatio', 'none');
-    overlay.appendChild(svg);
-  }
+    const metaLine = [item.year, item.categoryLabel].filter(Boolean).join(' · ');
 
-  bubbleCategories.forEach((cat, ci) => {
-    const children = _categoryChildren(cat.key);
+    btn.innerHTML = `
+      <span class="map-icon-index">${String(i + 1).padStart(2, '0')}</span>
+      <span class="map-icon-tip" role="tooltip">
+        <span class="map-icon-tip-title">${item.title}</span>
+        ${metaLine ? `<span class="map-icon-tip-meta">${metaLine}</span>` : ''}
+        ${item.tema ? `<span class="map-icon-tip-meta">${item.tema}</span>` : ''}
+        <span class="map-icon-tip-cta">View project →</span>
+      </span>`;
 
-    const block = document.createElement('div');
-    block.className = 'category-block';
-    if (!isMobile) {
-      block.style.left = (cat.rx * 100) + '%';
-      block.style.top  = (cat.ry * 100) + '%';
-    }
+    btn.addEventListener('click', (e) => {
+      if (_isTouchDevice() && !btn.classList.contains('is-open')) {
+        e.preventDefault();
+        document.querySelectorAll('.map-icon.is-open').forEach(el => {
+          if (el !== btn) el.classList.remove('is-open');
+        });
+        btn.classList.add('is-open');
+        return;
+      }
+      _openItem(item);
+    });
 
-    /* Contenedor imagen+gradiente: el gradiente queda DETRÁS de
-       la imagen, como un halo que asoma alrededor del recuadro
-       (mismo centro, más grande, z-index menor). */
-    const tileStack = document.createElement('div');
-    tileStack.className = 'category-tile-stack';
-
-    const gradient = document.createElement('div');
-    gradient.className = 'category-gradient';
-    gradient.style.background =
-      `radial-gradient(circle at 35% 30%, hsl(${cat.hue}, 90%, 78%), hsl(${(cat.hue + 40) % 360}, 85%, 62%) 60%, hsl(${(cat.hue + 80) % 360}, 70%, 45%) 100%)`;
-    tileStack.appendChild(gradient);
-
-    /* Imagen (real si `cat.img` existe, si no, placeholder generado).
-       Si `cat.img` apunta a un archivo que aún no subiste, cae
-       automáticamente en el placeholder para no mostrar un ícono
-       de imagen rota. */
-    const img = document.createElement('img');
-    img.className = 'category-tile';
-    img.src = cat.img || _categoryTexture(cat.hue);
-    img.alt = t(cat.word) || cat.fallback;
-    img.loading = 'lazy';
-    if (cat.img) {
-      img.onerror = () => { img.onerror = null; img.src = _categoryTexture(cat.hue); };
-    }
-
-    /* Label de la categoría, integrado sobre la imagen con fondo
-       negro para legibilidad (pedido explícito del spec). */
-    const label = document.createElement('div');
-    label.className = 'category-label';
-    label.textContent = t(cat.word) || cat.fallback;
-
-    const targetId = cat.pageKey && pageMap[cat.pageKey];
-    const hasPage  = targetId && document.getElementById(targetId);
-    const tileWrap = document.createElement('div');
-    tileWrap.className = 'category-tile-wrap';
-    if (hasPage) {
-      tileWrap.classList.add('is-link');
-      tileWrap.onclick = () => navigate(cat.pageKey);
-      tileWrap.setAttribute('role', 'button');
-      tileWrap.tabIndex = 0;
-      tileWrap.addEventListener('keydown', e => {
-        if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); navigate(cat.pageKey); }
-      });
-    } else {
-      tileWrap.classList.add('bubble-no-link');
-    }
-    tileWrap.appendChild(img);
-    tileWrap.appendChild(label);
-    tileStack.appendChild(tileWrap);
-    block.appendChild(tileStack);
-
-    /* Números de los hijos — uno por cada elemento real de esa
-       categoría en el Nav Bar, en el mismo orden. Cada número es
-       clicable y abre su proyecto/entrada correspondiente. */
-    if (children.length) {
-      const numbers = document.createElement('div');
-      numbers.className = 'category-numbers';
-      children.forEach((child, i) => {
-        const n = document.createElement('button');
-        n.type = 'button';
-        n.className = 'category-number';
-        n.textContent = String(i + 1).padStart(2, '0');
-        n.title = child.title;
-        n.setAttribute('aria-label', child.title);
-        n.onclick = () => openProject(child.url, child.title, t(cat.word) || cat.fallback);
-        numbers.appendChild(n);
-      });
-      block.appendChild(numbers);
-    }
-
-    overlay.appendChild(block);
+    layer.appendChild(btn);
   });
-
-  /* Dibuja las líneas de conexión una vez que los bloques ya
-     están posicionados (rx/ry en % del contenedor, así que las
-     líneas se calculan en las mismas coordenadas relativas y
-     quedan bien incluso si el contenedor cambia de tamaño). */
-  if (svg && !isMobile) {
-    svg.setAttribute('viewBox', '0 0 100 100');
-  const pairs = [
-  ['proyectos', 'graphics'],
-  ['graphics', 'research'],
-  ['research', 'texts'],
-  ['proyectos', 'workshops'],
-  
-];
-pairs.forEach(([keyA, keyB]) => {
-  const a = bubbleCategories.find(c => c.key === keyA);
-  const b = bubbleCategories.find(c => c.key === keyB);
-  if (!a || !b) return;
-  const line = document.createElementNS('http://www.w3.org/2000/svg', 'line');
-  line.setAttribute('x1', a.rx * 100); line.setAttribute('y1', a.ry * 100);
-  line.setAttribute('x2', b.rx * 100); line.setAttribute('y2', b.ry * 100);
-  line.setAttribute('vector-effect', 'non-scaling-stroke');
-  svg.appendChild(line);
-});
-    
-  }
 }
+
+/* Cierra cualquier tooltip abierto por tap al tocar fuera de un
+   ícono del mapa (solo relevante en touch, pero inofensivo en
+   desktop ya que ahí nada llega a tener .is-open). */
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.map-icon')) {
+    document.querySelectorAll('.map-icon.is-open').forEach(el => el.classList.remove('is-open'));
+  }
+});
 
 function initBubbles() {
   const container = document.getElementById('view-bubbles');
   if (!container) return;
-
-  const canvas = document.getElementById('bubble-canvas');
-  if (!canvas) return;
-
-  const W = container.offsetWidth;
-  const H = container.offsetHeight;
-  if (W === 0 || H === 0) return;
-
-  canvas.width  = W;
-  canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  _drawGrid(ctx, W, H);
-
-  /* Mobile: el overlay pasa a columna estática (ver CSS), así
-     que las posiciones rx/ry ya no aplican — se listan las 5
-     categorías en orden fijo, priorizando legibilidad sobre
-     mantener la posición exacta de desktop (pedido explícito). */
-  const isMobile = W < 700;
-  _buildExplorationOverlay(isMobile);
-
-  _bubblesReady = true;
+  _buildExplorationMap();
+  _mapReady = true;
 }
 
 
-/* ════════════════════════════════════════════════════════
-   HOME — VISTA "ÍNDICE" (3ra opción del switch, antes "grid")
-   ────────────────────────────────────────────────────────
-   ✏️ CAMBIO: pasó de galería de imágenes a lista/índice
-   editorial (una fila por entrada: nombre · categoría · tema
-   · año), inspirada en un listado de programas académicos.
-   Junta TODAS las entradas del navbar salvo About (Projects,
-   Graphics, Texts, Laboratories, Research) — una sola fuente
-   de verdad, sin duplicar nada.
-════════════════════════════════════════════════════════ */
-function _allNavItems() {
-  return [
-    ...projects.map(p => ({ title: p.title, categoryLabel: t('nav_projects'), tema: p.tag || '—', year: p.year, url: p.url })),
-    ...graphics.map(g => ({ title: g.title, categoryLabel: t('nav_graphics'), tema: g.tag || '—', year: g.year, url: g.url })),
-    ...texts.map(x => ({ title: x.title, categoryLabel: t('nav_texts'), tema: x.tag || '—', year: x.year, url: x.url })),
-    ...workshops.map(w => ({ title: w.title, categoryLabel: t('nav_workshops'), tema: w.tag || '—', year: w.year, url: w.url })),
-    ...researchItems.map(r => ({ title: r.title, categoryLabel: t('nav_research'), tema: r.tag || '—', year: r.year, url: r.url })),
-  ];
-}
 
-/* Una fila del índice: nombre · categoría · tema · año.
-   Clicable solo si tiene `url` (todas las entradas actuales
-   lo tienen, pero se deja el chequeo por si se agrega una sin
-   página propia en el futuro). */
 function _makeEditorialRow(item) {
   const row = document.createElement(item.url ? 'button' : 'div');
   row.type = item.url ? 'button' : undefined;
   row.className = 'editorial-row';
   if (item.url) {
     row.dataset.clickable = 'true';
-    row.onclick = () => openProject(item.url, item.title, item.categoryLabel);
+    row.onclick = () => _openItem(item);
   }
 
   const name = document.createElement('span');
@@ -1521,7 +1139,7 @@ function buildHomeGrid() {
      para que el usuario entienda qué representa cada dato. */
   const head = document.createElement('div');
   head.className = 'editorial-row editorial-head';
-  ['Nombre', 'Categoría', 'Tema', 'Año'].forEach((label, i) => {
+  ['Name', 'Category', 'Theme', 'Year'].forEach((label, i) => {
     const cell = document.createElement('span');
     cell.className = 'editorial-cell ' + ['editorial-name', 'editorial-category', 'editorial-tema', 'editorial-year'][i];
     cell.textContent = label;
@@ -1551,7 +1169,7 @@ function setHomeView(v) {
   [btnBubbles, btnSplit, btnGrid].forEach(el => el && el.classList.remove('active'));
 
   if (v === 'bubbles') {
-    if (!_bubblesReady) initBubbles();
+    if (!_mapReady) initBubbles();
     viewBubbles.classList.add('active');
     if (btnBubbles) btnBubbles.classList.add('active');
   } else if (v === 'grid') {
@@ -1563,16 +1181,6 @@ function setHomeView(v) {
     if (btnSplit) btnSplit.classList.add('active');
   }
 }
-
-/* ── Redibuja al cambiar el tamaño de ventana ── */
-let _resizeTimer;
-window.addEventListener('resize', () => {
-  clearTimeout(_resizeTimer);
-  _resizeTimer = setTimeout(() => {
-    _bubblesReady = false;
-    if (_currentView === 'bubbles') initBubbles();
-  }, 150);
-});
 
 /* ════════════════════════════════════════════════════════
    12. RIGHT NAV
@@ -1594,9 +1202,19 @@ document.addEventListener('DOMContentLoaded', () => {
   _initTFGrid(document);
   /* Si la página de proyecto se abrió standalone (no embebida
      vía fetch), también necesita el botón flotante de scroll
-     contextual — openProject() ya lo hace por su cuenta cuando
-     el portafolio la carga embebida. */
-  if (document.querySelector('.project-col-text, .project-col-images')) {
+     contextual y la navegación Next/Previous — openProject()
+     ya se encarga de ambos cuando el portafolio la carga
+     embebida. La entrada actual se identifica por el nombre de
+     archivo de la URL (mismo mecanismo que usa el resto del
+     sitio para hacer match contra _allNavItems()). */
+  const splitEl = document.querySelector('.project-split');
+  if (splitEl) {
     _initScrollHints(document);
+    const fileName = window.location.pathname.split('/').pop();
+    const match = _allNavItems().find(it => it.url && it.url.endsWith(fileName));
+    if (match) {
+      const main = document.getElementById('main');
+      if (main) _buildProjectNav(main, match.url);
+    }
   }
 });

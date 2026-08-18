@@ -1,10 +1,10 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!-- RESEARCH — entrada de ejemplo (ARCHIVO DUMMY). Misma plantilla que Texts/*.html: abre en pestaña nueva. -->
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[Título de investigación de ejemplo]</title>
+  <title>[Example research title]</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
@@ -20,16 +20,13 @@
 </head>
 <body>
   <div class="essay">
-    <a class="back" href="../index.html?page=research" data-i18n="back_to_portfolio">← volver al portafolio</a>
-    <h1>[Título de investigación de ejemplo]</h1>
+    <a class="back" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
+    <h1>[Example research title]</h1>
     <p class="meta">Research — 2026</p>
-    <p>[Reemplaza este párrafo con el contenido real de la investigación. Dummy funcional, ya conectado a la lista de Research agrupada por año.]</p>
+    <p>[Replace this paragraph with the real research content. Functional dummy, already wired into the Research list grouped by year.]</p>
   </div>
-  <!-- i18n.js + contrast.js: esta página abre standalone en pestaña
-       nueva, pero igual respeta el idioma elegido en el portafolio
-       (localStorage) y el detector de contraste — requisito
-       transversal a todo el sitio, no solo al layout con nav. -->
+  <!-- i18n.js: traduce el link "back to portfolio" (data-i18n) —
+       requisito transversal a todo el sitio, no solo al layout con nav. -->
   <script src="../i18n.js"></script>
-  <script src="../contrast.js"></script>
-</body>
+  </body>
 </html>

@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!--
   ══════════════════════════════════════════════════════
   PLANTILLA DE PROYECTO — cópiala y renómbrala para crear uno nuevo
@@ -15,7 +15,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>[Nombre del proyecto]</title>
+  <title>[Project name]</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:ital,wght@0,300;0,400;0,500;0,600;1,400&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="../style.css">
@@ -32,19 +32,19 @@
   <header id="top-bar">
     <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
     <div id="top-right">
-      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <a class="back-link" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
       <span id="clock">00:00</span>
     </div>
   </header>
   <nav id="left-nav">
     <ul>
       <li class="nav-section"><a href="../index.html">— Home</a></li>
-      <li class="nav-section active"><a href="../index.html?page=proyectos">— Proyectos</a></li>
+      <li class="nav-section active"><a href="../index.html">— Projects</a></li>
       <li class="nav-section"><a href="../index.html?page=about">About</a></li>
     </ul>
-    <div class="nav-project-label"><p>Viendo ahora</p><p>[Nombre del proyecto]</p></div>
+    <div class="nav-project-label"><p>Currently viewing</p><p>[Project name]</p></div>
   </nav>
-  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <aside id="right-nav"><span id="right-nav-label">Explore</span></aside>
   <div id="overlay" onclick="closeMobileNav()"></div>
 
   <main id="main">
@@ -52,40 +52,78 @@
       <div class="project-col-text">
         <div class="project-header">
           <div class="project-meta">
-            <span class="pill" style="background:#c8e8b4">[categoría]</span>
-            <span class="project-year">[año]</span>
+            <span class="pill" style="background:#c8e8b4">[category]</span>
+            <span class="project-year">[year]</span>
           </div>
           <h1>Synthetic Morphologies</h1>
-          <p class="project-lead">[Descripción breve, 1-2 líneas.]</p>
-          <blockquote>[Cita o frase destacada, opcional.]</blockquote>
+          <p class="project-lead">oooo</p>
+          <blockquote>[Featured quote, optional.]</blockquote>
         </div>
         <div class="project-text">
-          <p>[Cuerpo del texto principal del proyecto.]</p>
+         <ul>
+            <li>En</li>
+          </ul>
+          <p>
+            Synthetic Morphologies explores the transformation of photographs of natural patterns
+             captured across southern Chile and translate them into digital three-dimensional forms.
+            <br>
+            <br>
+            These synthetic structures are then virtually reinserted into the landscape through 
+            geolocated augmented reality, generating a dialogue between the organic and the computational, 
+            the physical and the virtual.
+            <br>
+            <br>
+            The project investigates the hybrid nature of these languages, asking what aspects of nature
+             can return transformed after being translated into the machine’s vector-based mathematical 
+             logic and reassembled as virtual matter within the environments from which they originated.
+          </p>
+          <br>
+         <p>-</p>
+         <br>
+
+          <ul>
+            <li>Es</li>
+          </ul>
+          <p>
+         Morfologías sintéticas parte de fotografías de patrones de la naturaleza tomadas en el sur de 
+         Chile, traduciéndolas en elementos tridimensionales digitales.
+         <br>
+         <br>
+         Estas formas sintéticas son reinsertadas virtualmente en el paisaje a través de realidad aumentada 
+         geolocalizada, generando un diálogo entre los dualismos de lo orgánico y lo computacional,
+         lo real y lo virtual.
+         <br>
+         <br>
+         El proyecto interroga el hibridismo de estos lenguajes: qué porción de la naturaleza puede regresar 
+         transformada, una vez traducida a la lógica matemática vectorial de la máquina, y fusionarse nuevamente 
+         con ella en una materia virtual.
+         </p>
+         
+
         </div>
         <div class="project-ficha">
           <dl>
-            <dt>Year</dt>         <dd>[año]</dd>
-            <dt>Category</dt>     <dd>[categoría]</dd>
-            <dt>Location</dt>     <dd>[lugar]</dd>
-            <dt>Collaborators</dt><dd>[colaboradores]</dd>
+            <dt>Year</dt>         <dd>2025</dd>
+            <dt>Category</dt>     <dd>[category]</dd>
+            <dt>Location</dt>     <dd>[location]</dd>
+            <dt>Collaborators</dt><dd>[collaborators]</dd>
           </dl>
         </div>
       </div>
       <div class="project-col-images">
         <div class="project-img-block">
-          <div class="img-placeholder"><span>imagen</span></div>
-          <p class="img-caption">[pie de foto]</p>
+          <div class="img-placeholder"><span>image</span></div>
+          <p class="img-caption">[photo caption]</p>
         </div>
       </div>
     </div>
   </main>
 
   <footer id="bottom-bar">
-    <span class="pill" style="background:#bde4be">Last update [fecha]</span>
+    <span class="pill" style="background:#bde4be">Last update [date]</span>
   </footer>
 
   <script src="../i18n.js"></script>
   <script src="../main.js"></script>
-  <script src="../contrast.js"></script>
-</body>
+  </body>
 </html>

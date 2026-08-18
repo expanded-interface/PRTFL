@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <!--
   WORKSHOP — Todo está interconectado (ARCHIVO DUMMY)
   Usa el mismo layout de dos columnas que los proyectos
@@ -26,19 +26,19 @@
   <header id="top-bar">
     <div id="logo" onclick="window.location.href='../index.html'">Camila S Caicedo</div>
     <div id="top-right">
-      <a class="back-link" href="../index.html">← volver al portafolio</a>
+      <a class="back-link" href="../index.html" data-i18n="back_to_portfolio">← back to portfolio</a>
       <span id="clock">00:00</span>
     </div>
   </header>
   <nav id="left-nav">
     <ul>
       <li class="nav-section"><a href="../index.html">— Home</a></li>
-      <li class="nav-section active"><a href="../index.html?page=workshops">— Laboratories</a></li>
+      <li class="nav-section active"><a href="../index.html">— Laboratories</a></li>
       <li class="nav-section"><a href="../index.html?page=about">About</a></li>
     </ul>
-    <div class="nav-project-label"><p>Viendo ahora</p><p>Todo está interconectado</p></div>
+    <div class="nav-project-label"><p>Currently viewing</p><p>Todo está interconectado</p></div>
   </nav>
-  <aside id="right-nav"><span id="right-nav-label">Explorar</span></aside>
+  <aside id="right-nav"><span id="right-nav-label">Explore</span></aside>
   <div id="overlay" onclick="closeMobileNav()"></div>
 
   <main id="main">
@@ -46,25 +46,25 @@
       <div class="project-col-text">
         <div class="project-header">
           <div class="project-meta">
-            <span class="pill" style="background:#ffcefb">taller</span>
+            <span class="pill" style="background:#ffcefb">workshop</span>
             <span class="project-year">2025</span>
           </div>
           <h1>Todo está interconectado</h1>
-          <p class="project-lead">[Reemplaza por la descripción real del taller.]</p>
+          <p class="project-lead">[Replace with the real workshop description.]</p>
         </div>
         <div class="project-ficha">
           <dl>
             <dt>Year</dt>     <dd>2025</dd>
-            <dt>Category</dt> <dd>Taller</dd>
+            <dt>Category</dt> <dd>Workshop</dd>
           </dl>
         </div>
       </div>
       <div class="project-col-images">
         <div class="project-img-block">
           <div class="img-placeholder">
-            <span>imagen del taller</span>
+            <span>workshop image</span>
           </div>
-          <p class="img-caption">[pie de foto]</p>
+          <p class="img-caption">[photo caption]</p>
         </div>
       </div>
     </div>
@@ -76,6 +76,5 @@
 
   <script src="../i18n.js"></script>
   <script src="../main.js"></script>
-  <script src="../contrast.js"></script>
-</body>
+  </body>
 </html>
