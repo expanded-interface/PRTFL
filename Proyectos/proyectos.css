@@ -72,7 +72,8 @@
   color: #6d6d6d;
 }
 
-.project-header h1 {
+.project-header h1,
+.project-text h1  {
   font-family: var(--font-serif);
   font-size: clamp(1.5rem, 0.8vw, 3rem);
   font-weight: 400;

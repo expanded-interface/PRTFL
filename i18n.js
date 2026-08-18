@@ -46,10 +46,8 @@ const translations = {
 
   // ── About ──
   about_title: 'Bio',
-  about_bio_p1: "I'm Natalia Cabrera media artist, XR designer and filmmaker. My work brings together art, technology and ecology through XR experiences, interactive installations, artificial intelligence and textile art. I explore ways of relating between the human and the non-human by developing projects that combine immersive environments, sensory data, and physical materials. My work has been presented in contexts of art, science, and cinema, including Sundance Film Festival, Venice Biennale, CPH:DOX, Berlin Science Week, the Chilean Biennial of Media Arts, Festival de la Imagen, among others. I'm the co-founder and creative director of Nanai Studio, an interdisciplinary space focused on art, technology, and nature. I currently live between Barcelona, Santiago, and the internet.",
-  about_bio_p2: "She has taken part in artist residencies across Latin America and Europe.",
-  about_quote: "A way of learning, from scratch, to take care of one's own dreams.",
-  about_cv_link: 'You can check my CV here',
+  about_bio_p1: "Camila S. Caicedo is an artist, experience and interface designer, and independent researcher from Cali, Colombia, based in Osorno, Chile. Her transdisciplinary practice integrates artificial intelligence, bioart, XR experiences, speculative design, UX/UI, net art, drawing, writing, and collective creation labs. Her work explores individual and collective narratives around the relationships between the human and the more-than-human. Through ancestral and contemporary technologies, she creates experiences and interfaces that explore other ways of perceiving, relating to, and inhabiting the world, questioning the structures of consumption and extractivism that run through today's technological systems, and seeking to imagine other forms of coexistence from a vision that empowers the pluriversal. Her practice unfolds through research and experimentation projects that combine artistic creation, technology, and territorial exploration. She also designs spaces for encounter and collective learning where digital tools, sensitive practices, and situated knowledge become means to investigate other ways of relating to our environment.",
+  about_cv_link: 'CV under request',
 
   // ── Footer ──
   footer_updated: 'Updated 07-28-26',
