@@ -68,7 +68,7 @@ const projects = [
     title:    'Morfologías sintéticas',
     category: 'digital-ecologies',
     tag:      'AR',
-    color:    '#1111111f',
+    color:    '#2a09ff1f',
     year:     '2025',
     desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
     images:   [],

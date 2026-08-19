@@ -36,7 +36,7 @@ const translations = {
   nav_search_placeholder: 'Search…',
 
   // ── Home ──
-  home_view_map: 'Exploration map',
+  home_view_map: 'Main projects',
   home_view_grid: 'Index',
   home_view_about: 'About',
 
@@ -55,7 +55,7 @@ const translations = {
 
   // ── Misceláneo ──
   portrait_label: 'portrait',
-  page_title: 'Camila S Caicedo - Portfolio',
+  page_title: '∵◎◉●𖦹⊙',
 
   // ── Estados de carga ──
   loading_label: 'Loading…',
