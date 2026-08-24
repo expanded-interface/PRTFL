@@ -50,8 +50,8 @@ const translations = {
   about_cv_link: 'CV under request',
 
   // ── Footer ──
-  footer_updated: 'Updated 07-28-26',
-  footer_location: 'Based in Los Lagos, CL',
+  footer_updated: 'Updated 08-22-26',
+  footer_location: 'Based in LL, ZOS, Chile',
 
   // ── Misceláneo ──
   portrait_label: 'portrait',
