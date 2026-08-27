@@ -1,0 +1,58 @@
+main.js
+   1.1 DATOS DE PROYECTOS
+
+
+ {
+    title:    'Ecosistemas de una máquina que sueña',
+    category: 'digital-ecologies',
+    tag:      'VR',
+    color:    '#1111111f',
+    year:     '2024',
+    desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
+    images:   [],
+    url: 'Proyectos/ecosistemadeunamaquina.html',
+  },
+ 
+  {
+    title:    'Cartografías Sensibles ~ DerivaLab',
+    category: 'social-interfaces-laboratories',
+    tag:      'Relational practice',
+    color:    '#1111111f',
+    year:     '2025',
+    desc:     'Intervención espacial con materiales encontrados en zonas rurales abandonadas.',
+    images:   [],
+    url: 'Proyectos/derivas.html',
+  },
+
+
+
+
+
+     1.3 DATOS DE TEXTOS
+
+
+  const texts = [
+  {
+    title: 'Escuela de sensibilización tecnológica',
+    tag:   'Web Essay',
+    color: '#ffdefd',
+    year:  '2025',
+    url:   'Texts/EST.html', // opcional
+    standalone: true,
+  },
+  {
+    title: 'Encuentros sobre el fuego',
+    tag:   'Laboratory',
+    color: '#ffdefd',
+    year:  '2026',
+    url:   'Texts/Fuego.html',
+    standalone: true,
+  },
+  {
+    title: 'Laboratorios interespecies- cuerpos y ecologías',
+    tag:   'Laboratory',
+    color: '#ffdefd',
+    year:  '2026',
+    url:   'Texts/Interespecie.html',
+    standalone: true,
+  },
