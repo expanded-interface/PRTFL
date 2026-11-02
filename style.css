@@ -653,6 +653,13 @@ html, body {
   pointer-events: none;
 }
 
+.project-img-block video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 /* ── Tooltip del ícono ──
    Mismo lenguaje visual (blanco / trazo negro 0.5px / 7px) que
    el ícono que lo dispara. Oculto por defecto (opacity 0 +
