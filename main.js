@@ -17,7 +17,7 @@
 
 
 
-/* ════════════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
    1.1 DATOS DE PROYECTOS
    ────────────────────────────────────────────────────────
    Estos proyectos aparecen en el grid de Projects y en
@@ -68,7 +68,7 @@ const projects = [
     title:    'Synthetic Morphologies',
     category: 'digital-ecologies',
     tag:      'AR',
-    color:    '#cdc6ff',
+    color:    '#1111111f',
     year:     '2025',
     desc:     'Registro del paisaje ribereño y sus memorias de habitación.',
     images:   [],
@@ -86,19 +86,6 @@ const projects = [
     url: 'Proyectos/ecosistemadeunamaquina.html',
   },
  
-  {
-    title:    'Cartografías Sensibles ~ DerivaLab',
-    category: 'social-interfaces-laboratories',
-    tag:      'Relational practice',
-    color:    '#1111111f',
-    year:     '2025',
-    desc:     'Intervención espacial con materiales encontrados en zonas rurales abandonadas.',
-    images:   [],
-    url: 'Proyectos/derivas.html',
-  },
-
-
-
 
   /* ──────────────────────────────────────────────────
      ✏️  PEGA AQUÍ TU PRÓXIMO PROYECTO:
@@ -116,8 +103,46 @@ const projects = [
      ────────────────────────────────────────────────── */
 ];
 
-
 /* ════════════════════════════════════════════════════════
+   1.2 DATOS DE WORKSHPS
+   ───────────────────────────────────────────────────────
+
+   ✏️  CÓMO AGREGAR UN Workshop:
+   a) Copia un bloque y pégalo al final del array.
+   b) Rellena los campos:
+      · title    → nombre en la card y en el nav
+      · category → 'series' | 'instalaciones' | 'publicaciones' | 'colaboraciones'
+      · tag      → etiqueta corta (ej: 'fotografía')
+      · color    → color de la pill (hex)
+      · year     → año
+      · desc     → descripción breve (2-3 líneas)
+      · images   → rutas de imágenes para el slider. Deja [] si no tienes.
+      · url      → ruta al HTML del proyecto (opcional, comenta si no existe)
+════════════════════════════════════════════════════════ */
+
+const workshops = [
+  {
+    title:    'Imaginarios Hiperconexos',
+    tag:      'Workshop',
+    color:    '#1111111f',
+    year:     '2025',
+    desc:     'Descripción breve.',
+    url:      'Workshops/imaginarios_hiperconexos copy.html', // opcional
+  },
+
+  {
+    title:    'Cartografías Sensibles ~ DerivaLab',
+    category: 'social-interfaces-laboratories',
+    tag:      'Relational practice',
+    color:    '#1111111f',
+    year:     '2025',
+    desc:     'Intervención espacial con materiales encontrados en zonas rurales abandonadas.',
+    images:   [],
+    url: 'Workshops/derivas.html',
+  },
+];
+
+/* ════════════════════════════════════════════════════════════════════════════════════════════════════════════════
    1.2 DATOS DE WORKSHPS
    ───────────────────────────────────────────────────────
 
@@ -144,33 +169,7 @@ const graphics = [
   },
 ];
 
-/* ════════════════════════════════════════════════════════
-   1.2 DATOS DE WORKSHPS
-   ───────────────────────────────────────────────────────
 
-   ✏️  CÓMO AGREGAR UN Workshop:
-   a) Copia un bloque y pégalo al final del array.
-   b) Rellena los campos:
-      · title    → nombre en la card y en el nav
-      · category → 'series' | 'instalaciones' | 'publicaciones' | 'colaboraciones'
-      · tag      → etiqueta corta (ej: 'fotografía')
-      · color    → color de la pill (hex)
-      · year     → año
-      · desc     → descripción breve (2-3 líneas)
-      · images   → rutas de imágenes para el slider. Deja [] si no tienes.
-      · url      → ruta al HTML del proyecto (opcional, comenta si no existe)
-════════════════════════════════════════════════════════ */
-
-const workshops = [
-  {
-    title:    'Todo está interconectado',
-    tag:      'Workshop',
-    color:    '#ffcefb',
-    year:     '2025',
-    desc:     'Descripción breve.',
-    url:      'Workshops/wk.html', // opcional
-  },
-];
 
 /* ════════════════════════════════════════════════════════
    1.3 DATOS DE TEXTOS
@@ -196,22 +195,33 @@ const workshops = [
    embeberse por fetch dentro del portafolio. Ver _openItem()
    y buildNavList() en la sección de navegación. */
 const texts = [
-  {
-    title: 'Escuela de sensibilización tecnológica',
-    tag:   'Web Essay',
-    color: '#ffdefd',
-    year:  '2025',
-    url:   'Texts/EST.html', // opcional
-    standalone: true,
-  },
-  {
-    title: 'Encuentros sobre el fuego',
+    {
+    title: 'Física cuántica y epistemologías más que humanas',
     tag:   'Laboratory',
     color: '#ffdefd',
     year:  '2026',
-    url:   'Texts/Fuego.html',
+    url:   'Texts/Interespecie.html',
     standalone: true,
   },
+
+   {
+    title: 'Simbiosis Lab',
+    tag:   'Laboratory',
+    color: '#ffdefd',
+    year:  '2026',
+    url:   'Texts/Interespecie.html',
+    standalone: true,
+  },
+
+   {
+    title: 'Decolonizar la imaginación',
+    tag:   'Laboratory',
+    color: '#ffdefd',
+    year:  '2026',
+    url:   'Texts/Interespecie.html',
+    standalone: true,
+  },
+
   {
     title: 'Laboratorios interespecies- cuerpos y ecologías',
     tag:   'Laboratory',
@@ -220,6 +230,25 @@ const texts = [
     url:   'Texts/Interespecie.html',
     standalone: true,
   },
+
+  {
+    title: 'Encuentros sobre el fuego',
+    tag:   'Laboratory',
+    color: '#ffdefd',
+    year:  '2026',
+    url:   'Texts/Fuego.html',
+    standalone: true,
+  },
+  
+  {
+    title: 'Escuela de sensibilización tecnológica',
+    tag:   'Web Essay',
+    color: '#ffdefd',
+    year:  '2025',
+    url:   'Texts/EST.html', // opcional
+    standalone: true,
+  },
+
 
   /* ──────────────────────────────────────────────────
      ✏️  PEGA AQUÍ TU PRÓXIMO TEXTO:

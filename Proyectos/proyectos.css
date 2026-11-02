@@ -317,6 +317,13 @@
   letter-spacing: 0.04em;
 }
 
+.project-img-block video {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+}
+
 
 /* ══════════════════════════════════════════════════════
    UTILIDADES (mantener compatibilidad con style.css)

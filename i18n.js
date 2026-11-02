@@ -25,10 +25,10 @@ const translations = {
   // ── Top bar / nav principal ──
   nav_home: 'HOME',
   nav_projects: 'PROJECTS',
-  nav_graphics: 'GRAPHICS',
-  nav_texts: 'TEXTS',
   nav_workshops: 'LABORATORIES',
+  nav_graphics: 'GRAPHICS',
   nav_research: 'RESEARCH',
+  nav_texts: 'LOGS',
   nav_about: 'ABOUT+STATEMENT',
   menu_toggle: 'Menu',
 
@@ -36,8 +36,8 @@ const translations = {
   nav_search_placeholder: 'Search…',
 
   // ── Home ──
-  home_view_map: 'Main projects',
-  home_view_grid: 'Index',
+  home_view_map: 'Recent projects',
+  home_view_grid: 'Index list',
   home_view_about: 'About',
 
   // ── Research / Workshops (placeholder) ──

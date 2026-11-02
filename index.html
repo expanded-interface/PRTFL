@@ -69,6 +69,15 @@
         </ul>
       </li>
 
+ <!-- ── WORKSHOPS ── ----------------->
+      <li class="nav-section" id="nav-workshops" data-nav-group="nav-workshops-group">
+        <span onclick="toggleGroup('nav-workshops-group')"><span data-i18n="nav_workshops">— LABORATORIES</span> <span class="nav-count" id="count-workshops"></span></span>
+        <ul class="nav-children" id="children-nav-workshops-group">
+          <!-- Los workshops se inyectan automáticamente desde main.js -->
+        </ul>
+      </li>
+
+
 
       <!-- ── GRAPHICS ── ----------------->
       <li class="nav-section" id="nav-graphics" data-nav-group="nav-graphics-group">
@@ -80,33 +89,23 @@
       </li>
 
 
-      <!-- ── TEXTS ── ----------------->
-      <!-- ✏️ También "padre": ya no navega a page-texts (removida).
-           Sus hijos abren en pestaña nueva (standalone: true en
-           main.js), no se embeben en el portafolio. -->
-      <li class="nav-section" id="nav-texts" data-nav-group="nav-texts-group">
-        <span onclick="toggleGroup('nav-texts-group')"><span data-i18n="nav_texts">— Texts</span> <span class="nav-count" id="count-texts"></span></span>
-        <ul class="nav-children" id="children-nav-texts-group">
-          <!-- Los textos se inyectan automáticamente desde main.js -->
-        </ul>
-      </li>
-
-
-      <!-- ── WORKSHOPS ── ----------------->
-      <li class="nav-section" id="nav-workshops" data-nav-group="nav-workshops-group">
-        <span onclick="toggleGroup('nav-workshops-group')"><span data-i18n="nav_workshops">— LABORATORIES</span> <span class="nav-count" id="count-workshops"></span></span>
-        <ul class="nav-children" id="children-nav-workshops-group">
-          <!-- Los workshops se inyectan automáticamente desde main.js -->
-        </ul>
-      </li>
-
-
       <!-- ── RESEARCH ── ---------------->
       <!-- Sin hijos emparentados en el nav, tal como pide el spec -->
       <li class="nav-section" id="nav-research">
         <a onclick="navigate('research')" data-i18n="nav_research">— RESEARCH</a>
       </li>
 
+      
+      <!-- ── TEXTS ── ----------------->
+      <!-- ✏️ También "padre": ya no navega a page-texts (removida).
+           Sus hijos abren en pestaña nueva (standalone: true en
+           main.js), no se embeben en el portafolio. -->
+      <li class="nav-section" id="nav-texts" data-nav-group="nav-texts-group">
+        <span onclick="toggleGroup('nav-texts-group')"><span data-i18n="nav_texts">— LOGS</span> <span class="nav-count" id="count-texts"></span></span>
+        <ul class="nav-children" id="children-nav-texts-group">
+          <!-- Los textos se inyectan automáticamente desde main.js -->
+        </ul>
+      </li>
 
       <!-- ── ABOUT ── ----------------->
       <!-- Sin hijos emparentados en el nav, tal como pide el spec -->
